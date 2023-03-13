@@ -1,0 +1,200 @@
+# from django.contrib.auth.models import User, Group
+from api.models import *
+from rest_framework import serializers
+from django.core.exceptions import ValidationError
+import datetime
+
+
+class SpecializationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Specialization
+        fields = '__all__'
+
+
+class TrainerForeignKey(serializers.PrimaryKeyRelatedField):
+    def get_queryset(self):
+        return User.objects.filter(role='trainer')
+
+
+class ClientsForeignKey(serializers.PrimaryKeyRelatedField):
+    def get_queryset(self):
+        return User.objects.filter(role='client')
+
+
+class UserSerializer(serializers.ModelSerializer):
+    trainer = TrainerForeignKey()
+    # clients = serializers.ChoiceField(User.objects.filter(role=1))
+    # field_name = serializers.ChoiceField(*args, **kwargs)
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'specialization', 'role', 'trainer', 'clients']
+        # depth = 1
+
+
+class RoomTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RoomType
+        fields = '__all__'
+
+
+class RoomSerializer(serializers.ModelSerializer):
+    # room_type = RoomTypeSerializer()
+
+    class Meta:
+        model = Room
+        fields = '__all__'
+
+
+class LessonSerializer(serializers.ModelSerializer):
+    trainer = TrainerForeignKey()
+    class Meta:
+        model = Lesson
+        fields = '__all__'
+
+    def validate(self, data):
+        start_time = data['start_time']
+        end_time = start_time + data['duration']
+        data['end_time'] = end_time
+
+        # Check if start time is during work hours
+        work_start = timezone.make_aware(datetime.datetime.combine(start_time.date(), datetime.time(9, 0)))
+        work_end = timezone.make_aware(datetime.datetime.combine(start_time.date(), datetime.time(22, 0)))
+        if start_time < work_start or start_time > work_end:
+            raise ValidationError('Начало занятия должно быть в рабочее время (9:00 - 22:00)')
+
+        # Check if start time is at an even hour
+        if start_time.minute != 0:
+            raise ValidationError('Занятие должно начинаться в 0 минут.')
+
+        # Check if trainer is available
+        trainer = data['trainer']
+        if trainer.lesson_set.filter(start_time__lt=start_time, end_time__gt=end_time).exists():
+            raise ValidationError('Тренер не доступен в это время')
+        if trainer.lesson_set.filter(start_time__lt=end_time, end_time__gt=start_time).exists():
+            raise ValidationError('Тренер не доступен в это время')
+
+        # Check if end time is before end of work day
+        if end_time > work_end:
+            raise ValidationError('Занятие должно заканчиваться до окончания рабочего дня (22:00)')
+
+        return data
+
+
+class GymSerializer(serializers.ModelSerializer):
+    # rooms = RoomSerializer(many=True)
+    class Meta:
+        model = Gym
+        # depth = 1
+        fields = '__all__'
+
+
+class InventorySerializer(serializers.ModelSerializer):
+    # room = RoomSerializer()
+
+    class Meta:
+        model = Inventory
+        fields = '__all__'
+
+
+class PlanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Plan
+        fields = '__all__'
+
+
+class SubscriptionSerializer(serializers.ModelSerializer):
+    # user = UserSerializer()
+    # plan = PlanSerializer()
+
+    class Meta:
+        model = Subscription
+        fields = '__all__'
+
+    def validate(self, data):
+        if self.context['request'].user.role == 'client':
+            data['user'] = self.context['request'].user
+        data['visits_left'] = data['plan'].visits_count
+        return data
+
+
+class FinancialRecordSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FinancialRecord
+        fields = '__all__'
+
+
+class ExerciseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Exercise
+        fields = '__all__'
+
+
+class ExerciseSetSerializer(serializers.ModelSerializer):
+    # exercises = ExerciseSerializer(many=True)
+
+    class Meta:
+        model = ExerciseSet
+        fields = '__all__'
+
+
+class TrainingProgramSerializer(serializers.ModelSerializer):
+    # exercise_sets = ExerciseSetSerializer(many=True)
+
+    class Meta:
+        model = TrainingProgram
+        fields = '__all__'
+
+
+class TrainingSessionSerializer(serializers.ModelSerializer):
+    # program = TrainingProgramSerializer()
+    # exercise_set = ExerciseSetSerializer(many=True)
+    # trainer = UserSerializer()
+    # client = UserSerializer()
+
+    class Meta:
+        model = TrainingSession
+        fields = '__all__'
+
+
+class ChatSerializer(serializers.ModelSerializer):
+    # members = UserSerializer(many=True)
+
+    class Meta:
+        model = Chat
+        fields = '__all__'
+
+
+class MessageSerializer(serializers.ModelSerializer):
+    # author = UserSerializer()
+    # chat = ChatSerializer()
+    replies = 'self'
+
+    class Meta:
+        model = Message
+        fields = '__all__'
+
+
+class ReactionSerializer(serializers.ModelSerializer):
+    # author = UserSerializer()
+    # message = MessageSerializer()
+
+    class Meta:
+        model = Reaction
+        fields = '__all__'
+
+
+class MailingListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MailingList
+        fields = '__all__'
+
+
+class NewsletterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Newsletter
+        fields = '__all__'
+
+# class GroupSerializer(serializers.HyperlinkedModelSerializer):
+#     class Meta:
+#         model = Group
+#         fields = ['url', 'name']
