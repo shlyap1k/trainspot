@@ -161,14 +161,6 @@ class TrainingSessionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ChatSerializer(serializers.ModelSerializer):
-    # members = UserSerializer(many=True)
-
-    class Meta:
-        model = Chat
-        fields = '__all__'
-
-
 class MessageSerializer(serializers.ModelSerializer):
     # author = UserSerializer()
     # chat = ChatSerializer()
@@ -176,6 +168,15 @@ class MessageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Message
+        fields = '__all__'
+
+
+class ChatSerializer(serializers.ModelSerializer):
+    # members = UserSerializer(many=True)
+    creator = UserSerializer()
+    messages = MessageSerializer(many=True)
+    class Meta:
+        model = Chat
         fields = '__all__'
 
 

@@ -158,6 +158,18 @@ class ChatViewSet(viewsets.ModelViewSet):
     serializer_class = ChatSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        print(instance.name)
+        serializer = ChatSerializer(instance=instance)
+        return Response(serializer.data)
+
+    def list(self, request, *args, **kwargs):
+        user = request.user
+        queryset = (Chat.objects.filter(creator=user) | Chat.objects.filter(members__in=[user])).distinct()
+        serializer = ChatSerializer(queryset, many=True)
+        return Response(serializer.data)
+
 
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()

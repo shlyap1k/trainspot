@@ -1,5 +1,4 @@
-import apiClient from "@/src/apiClient";
-import state from "@/store/user/state";
+import apiClient from "@/src/apiClient"
 
 export default {
   fetchUser({ commit }) {
@@ -13,7 +12,7 @@ export default {
       })
   },
   fetchSubscription({ commit }) {
-    apiClient.get("subscriptions/1/")
+    apiClient.get("subscriptions/1/")  // TODO: GET USER ID
       .then(response =>{
         commit("setUserSubscription", response.data)
         })
@@ -23,6 +22,17 @@ export default {
   },
   logoutUser({ commit }) {
     commit("resetUserData")
+  },
+  fetchChats({ commit }) {
+    apiClient.get("chats/")
+      .then(response =>{
+        commit("setChats", response.data)
+        })
+      .catch(e => {
+        console.log(e)
+      })
+  },
+  selectCurrentChat({commit}, payload) {
+    commit("setCurrentChat", payload.chatId)
   }
-
 }

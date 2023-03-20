@@ -1,100 +1,6 @@
-<!--<template>-->
-<!--  <div>-->
-<!--    <nav-->
-<!--      class="navbar header has-shadow is-primary"-->
-<!--      role="navigation"-->
-<!--      aria-label="main navigation"-->
-<!--    >-->
-<!--      <div class="navbar-brand">-->
-<!--        <a class="navbar-item" href="/">-->
-<!--&lt;!&ndash;          <img src="~assets/buefy.png" alt="Buefy" height="28" />&ndash;&gt;-->
-<!--        </a>-->
-
-<!--        <div class="navbar-burger">-->
-<!--          <span />-->
-<!--          <span />-->
-<!--          <span />-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </nav>-->
-
-<!--    <section class="main-content columns">-->
-<!--      <aside class="column is-2 section">-->
-<!--        <p class="menu-label is-hidden-touch">General</p>-->
-<!--        <ul class="menu-list">-->
-<!--          <li v-for="(item, key) of globalItems" :key="key">-->
-<!--            <nuxt-link :to="item.to" exact-active-class="is-active">-->
-<!--              <v-icon :icon="item.icon" />-->
-<!--              {{ item.title }}-->
-<!--            </nuxt-link>-->
-<!--          </li>-->
-<!--          <span v-if="loggedIn">-->
-<!--            <li v-for="(item, key) of authenticatedItems" :key="key">-->
-<!--              <nuxt-link :to="item.to" exact-active-class="is-active">-->
-<!--                <v-icon :icon="item.icon" />-->
-<!--                {{ item.title }}-->
-<!--              </nuxt-link>-->
-<!--            </li>-->
-<!--          </span>-->
-<!--        </ul>-->
-<!--      </aside>-->
-
-<!--      <div class="container column is-10">-->
-<!--        <nuxt />-->
-<!--      </div>-->
-<!--    </section>-->
-<!--  </div>-->
-<!--</template>-->
-
-<!--<script>-->
-<!--import { mapState } from 'vuex'-->
-<!--export default {-->
-<!--  data() {-->
-<!--    return {-->
-<!--      globalItems: [-->
-<!--        {-->
-<!--          title: 'Home',-->
-<!--          icon: 'home',-->
-<!--          to: { name: 'index' }-->
-<!--        }-->
-<!--      ],-->
-<!--      authenticatedItems: [-->
-<!--        {-->
-<!--          title: 'Выход',-->
-<!--          icon: 'logout',-->
-<!--          to: { name: 'logout' }-->
-<!--        },-->
-<!--        {-->
-<!--          title: 'вы авторизованы',-->
-<!--          icon: 'test',-->
-<!--          to: {name:'/gyms'}-->
-<!--        },-->
-<!--        {-->
-<!--          title: 'todos',-->
-<!--          icon: 'home',-->
-<!--          to : { name: 'todos'}-->
-<!--        },-->
-<!--        {-->
-<!--          title: 'fruits',-->
-<!--          icon: 'home',-->
-<!--          to : { name: 'fruits'}-->
-<!--        },-->
-<!--        {-->
-<!--          title: 'gyms',-->
-<!--          icon: 'home',-->
-<!--          to : { name: 'gyms'}-->
-<!--        }-->
-<!--      ]-->
-<!--    }-->
-<!--  },-->
-<!--  computed: {-->
-<!--    ...mapState('auth', ['loggedIn'])-->
-<!--  }-->
-<!--}-->
-<!--</script>-->
-
 <template>
   <v-app dark>
+    <v-col>
     <v-navigation-drawer
       v-model="drawer"
       :clipped="clipped"
@@ -155,6 +61,7 @@
       <v-toolbar-title>{{ title }}</v-toolbar-title>
       <v-spacer />
     </v-app-bar>
+    </v-col>
     <v-main>
       <v-container>
         <Nuxt />
@@ -175,6 +82,9 @@ export default {
   name: 'DefaultLayout',
   mounted() {
       this.$store.dispatch("user/fetchUser")
+    // this.$store.dispatch("user/fetchUser")
+      this.$store.dispatch("user/fetchSubscription")
+      this.$store.dispatch("user/fetchChats")
     },
   computed: {
     ...mapState('auth', ['loggedIn']),
@@ -223,7 +133,7 @@ export default {
         {
           title: 'Чаты',
           icon: 'mdi-forum',
-          to: '/profile'
+          to: '/chats'
         },
         {
           title: 'Рассылки',

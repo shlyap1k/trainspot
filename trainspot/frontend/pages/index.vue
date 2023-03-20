@@ -73,32 +73,12 @@
         </v-card-actions>
       </v-card>
     </v-col>
-    <v-btn onclick="this.addFruitFromComponent">добавить фрукты</v-btn>
   </v-row>
 </template>
 
 <script>
 export default {
   name: 'IndexPage',
-  async created() {
-    console.log("test")
-    console.log(this.$auth.state.user)
-  },
-  methods: {
-        addFruitFromComponent() {
-            const newFruit = {
-                name: 'Pink Lady',
-                type: 'Apple',
-                id: 2,
-            }
-
-            // Используем dispatch чтобы вызвать экшен
-            this.$store.dispatch('fruits/addFruit', newFruit)
-
-            // Используем коммит чтобы вызвать мутацию
-            this.$store.commit('fruits/addFruit', newFruit)
-        },
-    },
 }
 
 </script>

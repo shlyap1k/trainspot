@@ -19,6 +19,7 @@
           <v-card-text class="pt-4">
             <p>Куплен: {{ subscription.start_date }}</p>
             <p>Осталось посещений: {{ subscription.visits_left }}</p>
+            <p>Осталось дней: {{subscription.days_left}}</p>
           </v-card-text>
         </v-card>
       </v-flex>
@@ -28,6 +29,7 @@
 
 <script>
 export default {
+  name: "UserInfo",
   props: {
     user: {
       type: Object,
