@@ -88,10 +88,11 @@ class Subscription(models.Model):
     start_date = models.DateField(auto_now_add=True)
     visits_left = models.PositiveIntegerField()
 
+
     def days_left(self):
         duration = timezone.timedelta(days=self.plan.duration_days)
         end_date = self.start_date + duration
-        days_left = (end_date - timezone.now()).days
+        days_left = (end_date - timezone.now().date()).days
         return max(0, days_left)
 
     def set_plan(self, plan):

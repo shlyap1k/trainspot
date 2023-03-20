@@ -48,3 +48,4 @@ coverage.xml
 *.sw*
 manage.py
 .DS_Store
+trainspot/trainspot/settings.py

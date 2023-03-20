@@ -41,13 +41,75 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
+    '@nuxtjs/axios',
+    '@nuxtjs/auth',
+    '@nuxtjs/toast',
+    'cookie-universal-nuxt'
   ],
-
+auth: {
+    strategies: {
+        local: {
+            endpoints: {
+                login: {
+                    url: '/api/login/',
+                    method: 'post',
+                    propertyName: 'access',
+                    altProperty: 'refresh'
+                },
+                logout: {
+                  url: '/api/logout/',
+                  method: 'post',
+                  propertyName: 'access',
+                  altProperty: 'refresh'
+                },
+                user: false
+            }
+        }
+    },
+    redirect: {
+        login: '/login'
+    },
+},
+router: {
+    middleware: ['auth']
+},
+axios: {
+    baseURL: 'http://localhost:8000',
+    credentials: true,
+    init(axios) {
+      axios.defaults.withCredentials = true
+    }
+},
+toast: {
+    position: 'bottom-right',
+    iconPack: 'fontawesome',
+    duration: 3000,
+    register: [
+      {
+        name: 'defaultSuccess',
+        message: (payload) =>
+          !payload.msg ? 'Операция успешно выполнена' : payload.msg,
+        options: {
+          type: 'success',
+          icon: 'check'
+        }
+      },
+      {
+        name: 'defaultError',
+        message: (payload) =>
+          !payload.msg ? 'Ошибка' : payload.msg,
+        options: {
+          type: 'error',
+          icon: 'times'
+        }
+      }
+    ]
+  },
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
-      dark: true,
+      dark: false,
       themes: {
         dark: {
           primary: colors.blue.darken2,

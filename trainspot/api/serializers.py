@@ -27,7 +27,7 @@ class UserSerializer(serializers.ModelSerializer):
     # field_name = serializers.ChoiceField(*args, **kwargs)
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'specialization', 'role', 'trainer', 'clients']
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'specialization', 'role', 'trainer', 'clients']
         # depth = 1
 
 
@@ -106,9 +106,14 @@ class SubscriptionSerializer(serializers.ModelSerializer):
     # user = UserSerializer()
     # plan = PlanSerializer()
 
+    days_left = serializers.SerializerMethodField('get_days_left')
+
+    def get_days_left(self, obj):
+        return obj.days_left()
+
     class Meta:
         model = Subscription
-        fields = '__all__'
+        fields = ['id', 'start_date', 'days_left', 'visits_left', 'user', 'plan']
 
     def validate(self, data):
         if self.context['request'].user.role == 'client':

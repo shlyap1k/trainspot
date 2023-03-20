@@ -1,6 +1,9 @@
 # from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
 from rest_framework import permissions
+from rest_framework.generics import get_object_or_404
+from rest_framework.response import Response
+
 from api.serializers import *
 from api.models import *
 from rest_framework.permissions import BasePermission, IsAuthenticated, SAFE_METHODS
@@ -31,7 +34,7 @@ class TrainersListViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
-    queryset = User.objects.filter(role=4)
+    queryset = User.objects.filter(role='trainer')
     serializer_class = UserSerializer
     # permission_classes = [permissions.AllowAny]
     def get_permissions(self):
@@ -117,6 +120,7 @@ class SubscriptionViewSet(viewsets.ModelViewSet):
     queryset = Subscription.objects.all()
     serializer_class = SubscriptionSerializer
     permission_classes = [permissions.IsAuthenticated]
+    lookup_field = 'user__id'
 
 
 class FinancialRecordViewSet(viewsets.ModelViewSet):
