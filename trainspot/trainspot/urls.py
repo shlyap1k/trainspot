@@ -45,4 +45,5 @@ urlpatterns = [
     # path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('api/', include((router.urls, 'api'), namespace='instance_name')),
     path('api/', include('rest_registration.api.urls')),
+    path('get-message-reactions/', views.getMessageReactions, name='message-reactions-api'),
 ]

@@ -161,14 +161,34 @@ class TrainingSessionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class ReactionSerializer(serializers.ModelSerializer):
+    # author = UserSerializer()
+    # message = MessageSerializer()
+
+    class Meta:
+        model = Reaction
+        fields = '__all__'
+
+    def to_representation(self, instance):
+        representation = super(ReactionSerializer, self).to_representation(instance)
+        representation['author'] = UserSerializer(instance.author).data
+        return representation
+
+
 class MessageSerializer(serializers.ModelSerializer):
     # author = UserSerializer()
+    reactions = ReactionSerializer(many=True, read_only=True)
     # chat = ChatSerializer()
     replies = 'self'
 
     class Meta:
         model = Message
         fields = '__all__'
+
+    def to_representation(self, instance):
+        representation = super(MessageSerializer, self).to_representation(instance)
+        representation['author'] = UserSerializer(instance.author).data
+        return representation
 
 
 class ChatSerializer(serializers.ModelSerializer):
@@ -177,15 +197,6 @@ class ChatSerializer(serializers.ModelSerializer):
     messages = MessageSerializer(many=True)
     class Meta:
         model = Chat
-        fields = '__all__'
-
-
-class ReactionSerializer(serializers.ModelSerializer):
-    # author = UserSerializer()
-    # message = MessageSerializer()
-
-    class Meta:
-        model = Reaction
         fields = '__all__'
 
 

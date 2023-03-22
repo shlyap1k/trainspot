@@ -1,6 +1,7 @@
 # from django.contrib.auth.models import User, Group
 from rest_framework import viewsets
 from rest_framework import permissions
+from rest_framework.decorators import api_view
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
@@ -182,6 +183,18 @@ class ReactionViewSet(viewsets.ModelViewSet):
     serializer_class = ReactionSerializer
     permission_classes = [permissions.IsAuthenticated]
 
+    def create(self, request, *args, **kwargs):
+        try:
+            current = Reaction.objects.filter(message_id=request.data['message'], author_id=request.data['author'])
+        except Reaction.DoesNotExist:
+            current = None
+        if current:
+            for c in current:
+                c.delete()
+        reaction = Reaction(type=request.data['type'], author_id=request.data['author'], message_id=request.data['message'])
+        reaction.save()
+        return Response(status=200)
+
 
 class MailingListViewSet(viewsets.ModelViewSet):
     queryset = MailingList.objects.all()
@@ -195,6 +208,9 @@ class NewsletterViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 
+@api_view(['GET'])
+def getMessageReactions(request):
+    return Response({"message": "Hello, world!"})
 # class GroupViewSet(viewsets.ModelViewSet):
 #     """
 #     API endpoint that allows groups to be viewed or edited.

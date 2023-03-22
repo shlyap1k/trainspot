@@ -2,7 +2,7 @@
 <v-card @click="selectChat(chat.id)">
   <v-card-title>{{chat.name}}</v-card-title>
   <v-card-subtitle>{{chat.creator.first_name + ' ' + chat.creator.last_name + ' (@' + chat.creator.username}})</v-card-subtitle>
-  <v-card-text>{{ lastMessage(chat.messages)}}</v-card-text>
+  <v-card-text>{{ lastMessage(chat.messages).substring(0,30)+".."}}</v-card-text>
 </v-card>
 </template>
 
@@ -20,7 +20,10 @@
     methods: {
       lastMessage(messages) {
         if (messages.slice(-1).pop()) {
-          return messages.slice(-1).pop().text
+          let author = messages.slice(-1).pop().author
+          return author.first_name + ' ' + author.last_name + ': ' + messages.slice(-1).pop().text
+        } else {
+          return 'Нет сообщений'
         }
       },
       selectChat(chatId) {
