@@ -10,18 +10,12 @@
               v-if="chats"
             >
               <div class="d-flex align-center justify-space-between">
-                  <v-card-title>
-                    Ваши чаты
-                  </v-card-title>
+                <v-card-title>
+                  Ваши чаты
 
-                  <v-btn
-                    variant="plain"
-                    color="white"
-                    rounded="xl"
-                    theme="dark"
-                  >
-                    Создать чат
-                  </v-btn>
+                </v-card-title>
+
+                  <create-chat-form/>
               </div>
               <chat-list :chats="chats"/>
             </v-card>
@@ -38,14 +32,13 @@
         <v-row>
           <v-col>
             <v-card rounded="xl">
-              <messages-list :messages="getMessages()"/>
-    <!--          {{chatId}}-->
+              <messages-list :messages="messages" :members="chat"/>
             </v-card>
           </v-col>
         </v-row>
         <v-row>
           <v-col>
-            <v-card rounded="xl">
+            <v-card rounded="xl" v-if="this.chatId">
               <message-box :chat="this.chatId"/>
             </v-card>
           </v-col>
@@ -58,18 +51,21 @@
 <script>
   import ChatList from '@/components/chat/chat_list/ChatList.vue'
   import MessagesList from '@/components/chat/messages/MessagesList.vue'
-  import MessageBox from "@/components/chat/messages/MessageBox.vue";
+  import MessageBox from "@/components/chat/messages/messages_forms/MessageBox.vue";
+  import CreateChatForm from "@/components/chat/chat_list/Forms/CreateChatForm.vue";
 
   import { mapGetters } from 'vuex'
   export default {
     name: "chats",
     components: {
-      'messages-list' : MessagesList,
-      'message-box' : MessageBox
+      MessagesList,
+      MessageBox,
+      CreateChatForm
     },
     modules: [ChatList, MessagesList],
     mounted() {
       this.$store.dispatch("user/fetchChats")
+      this.$store.dispatch("chat/fetchMessages", {chat: this.$store.state.user.chatId})
     },
     methods: {
       getMessages() {
@@ -83,7 +79,8 @@
     computed: {
       ...mapGetters({
         chats: 'user/getChats',
-        chatId: 'user/getChatId'
+        chatId: 'user/getChatId',
+        messages: 'chat/getMessages',
       })
     }
   }

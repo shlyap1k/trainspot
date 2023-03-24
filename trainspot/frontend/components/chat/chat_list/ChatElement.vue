@@ -28,6 +28,7 @@
       },
       selectChat(chatId) {
         this.$store.dispatch("user/selectCurrentChat", {chatId: chatId})
+        this.$store.dispatch("chat/fetchMessages", {chat: chatId})
       },
     }
   }

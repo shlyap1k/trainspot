@@ -24,6 +24,7 @@
 <script>
   import ChatElement from '@/components/chat/chat_list/ChatElement.vue'
   export default {
+    // TODO создать чат
     name: "ChatList",
     modules: [ChatElement],
     props: {

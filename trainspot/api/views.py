@@ -161,7 +161,6 @@ class ChatViewSet(viewsets.ModelViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
-        print(instance.name)
         serializer = ChatSerializer(instance=instance)
         return Response(serializer.data)
 
@@ -184,15 +183,19 @@ class ReactionViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def create(self, request, *args, **kwargs):
+        to_save = True
         try:
             current = Reaction.objects.filter(message_id=request.data['message'], author_id=request.data['author'])
         except Reaction.DoesNotExist:
             current = None
         if current:
             for c in current:
+                if c.type == request.data['type']:
+                    to_save = False
                 c.delete()
         reaction = Reaction(type=request.data['type'], author_id=request.data['author'], message_id=request.data['message'])
-        reaction.save()
+        if (to_save):
+            reaction.save()
         return Response(status=200)
 
 

@@ -188,16 +188,30 @@ class MessageSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super(MessageSerializer, self).to_representation(instance)
         representation['author'] = UserSerializer(instance.author).data
+        # representation['members'] = []
+        # for m in instance.members:
+        #     representation['members'].append()
         return representation
 
 
 class ChatSerializer(serializers.ModelSerializer):
     # members = UserSerializer(many=True)
-    creator = UserSerializer()
-    messages = MessageSerializer(many=True)
+    # creator = UserSerializer()
+    # messages = MessageSerializer(many=True)
     class Meta:
         model = Chat
         fields = '__all__'
+
+    def to_representation(self, instance):
+        representation = super(ChatSerializer, self).to_representation(instance)
+        representation['creator'] = UserSerializer(instance.creator).data
+        representation['messages'] = []
+        representation['members'] = []
+        for m in instance.members.all():
+            representation['members'].append(UserSerializer(m).data)
+        for m in instance.messages.all():
+            representation['messages'].append(MessageSerializer(m).data)
+        return representation
 
 
 class MailingListSerializer(serializers.ModelSerializer):
