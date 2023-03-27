@@ -110,10 +110,12 @@ class FinancialRecord(models.Model):
         (INCOME, 'income'),
         (EXPENSE, 'expense'),
     )
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='finances', null=True)
     date = models.DateField(auto_now_add=True)
     amount = models.DecimalField(max_digits=8, decimal_places=2)
     description = models.CharField(max_length=255)
     type = models.PositiveSmallIntegerField(choices=FIN_CHOICES, blank=True, null=True)
+
 
 #  Models for training
 class TrainingProgram(models.Model):

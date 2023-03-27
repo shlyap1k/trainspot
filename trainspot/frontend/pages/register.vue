@@ -59,15 +59,17 @@
 
 <script>
 export default {
-  data: () => ({
-    userData: {
-      email: '',
-      password: '',
-      password2: '',
-      showPassword: false,
-      showPassword2: false,
-    },
-  }),
+  data(){
+    return {
+      userData: {
+        email: '',
+        password: '',
+        password2: '',
+        showPassword: false,
+        showPassword2: false,
+      }
+    }
+  },
   methods: {
     async signUp(registrationInfo) {
       await this.$axios

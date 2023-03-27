@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-layout flex align-center justify-center>
-      <v-flex xs6 sm6 elevation-6>
+      <v-flex xs8 sm8 elevation-8>
         <v-card>
           <v-card-title flex align-center justify-center>
             <h1>Информация о пользователе</h1>
@@ -12,7 +12,7 @@
             <p>Role: {{ user.role }}</p>
           </v-card-text>
         </v-card>
-        <v-card>
+        <v-card v-if="subscription">
           <v-card-title flex align-center justify-center>
             <h1>Абонемент</h1>
           </v-card-title>

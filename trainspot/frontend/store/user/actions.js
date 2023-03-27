@@ -11,14 +11,16 @@ export default {
         console.log(e)
       })
   },
-  fetchSubscription({ commit }) {
-    apiClient.get("subscriptions/1/")  // TODO: GET USER ID
-      .then(response =>{
-        commit("setUserSubscription", response.data)
+  fetchSubscription({ commit }, payload) {
+    if (payload) {
+      apiClient.get("subscriptions/" + payload.userId + "/")  // TODO: GET USER ID
+        .then(response => {
+          commit("setUserSubscription", response.data)
         })
-      .catch(e => {
-        console.log(e)
-      })
+        .catch(e => {
+          console.log(e)
+        })
+    }
   },
   logoutUser({ commit }) {
     commit("resetUserData")

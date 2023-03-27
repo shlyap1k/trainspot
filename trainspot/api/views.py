@@ -1,9 +1,19 @@
 # from django.contrib.auth.models import User, Group
-from rest_framework import viewsets
+from wsgiref.util import FileWrapper
+import jinja2
+import pdfkit
+import os
+from calendar import monthrange
+from django.db.models import Sum, Case, When, F, DecimalField
+from django.db.models.functions import TruncYear, TruncMonth
+from django.http import HttpResponse, FileResponse
+from django.utils.datastructures import MultiValueDictKeyError
+from rest_framework import viewsets, renderers
 from rest_framework import permissions
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, action
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
+from xhtml2pdf import pisa
 
 from api.serializers import *
 from api.models import *
@@ -106,6 +116,28 @@ class InventoryViewSet(viewsets.ModelViewSet):
             return [IsAuthenticated()]
 
 
+class PassthroughRenderer(renderers.BaseRenderer):
+    """
+        Return data as-is. View should supply a Response.
+    """
+    media_type = 'application/pdf'
+    format = 'pdf'
+    def render(self, data, accepted_media_type=None, renderer_context=None):
+        return data
+
+
+def get_pricelist_pdf(context):
+    template_loader = jinja2.FileSystemLoader('C:\\Users\\4dtya\Pycharmprojects\\trainspot1111\\trainspot\static\pdf\\price_list')
+    template_env = jinja2.Environment(loader=template_loader)
+    template = template_env.get_template('price_list.html')
+    output_text = template.render(context)
+    config = pdfkit.configuration(wkhtmltopdf='C:\Program Files\wkhtmltopdf\\bin\\wkhtmltopdf.exe')
+    pdfkit.from_string(output_text,
+                       f'C:\\Users\\4dtya\Pycharmprojects\\trainspot1111\price_list.pdf',
+                       configuration=config,
+                       css='C:\\Users\\4dtya\Pycharmprojects\\trainspot1111\\trainspot\static\pdf\\price_list\\price_list.css')
+
+
 class PlanViewSet(viewsets.ModelViewSet):
     queryset = Plan.objects.all()
     serializer_class = PlanSerializer
@@ -116,6 +148,20 @@ class PlanViewSet(viewsets.ModelViewSet):
         else:
             return [IsAuthenticated()]
 
+    @action(methods=['GET'], detail=True, renderer_classes=(PassthroughRenderer,))
+    def download(self, request, *args, **kwargs):
+        plans = Plan.objects.all()
+        context = {"plans": plans}
+        get_pricelist_pdf(context)
+        file_handle = open(f'C:\\Users\\4dtya\Pycharmprojects\\trainspot1111\price_list.pdf', "rb")
+        response = FileResponse(file_handle, content_type='application/pdf')
+        response['Content-Length'] = os.stat(
+            f"C:\\Users\\4dtya\Pycharmprojects\\trainspot1111\price_list.pdf").st_size
+        response['Content-Disposition'] = f'attachment; filename="price_list.pdf"'
+        print(response['Content-Disposition'])
+        return response
+
+
 
 class SubscriptionViewSet(viewsets.ModelViewSet):
     queryset = Subscription.objects.all()
@@ -124,10 +170,140 @@ class SubscriptionViewSet(viewsets.ModelViewSet):
     lookup_field = 'user__id'
 
 
+
+def get_personal_report_pdf(context):
+    user_id = context['user'].id
+    template_loader = jinja2.FileSystemLoader('C:\\Users\\4dtya\Pycharmprojects\\trainspot1111\\trainspot\static\pdf\\user_report')
+    template_env = jinja2.Environment(loader=template_loader)
+    template = template_env.get_template('report.html')
+    output_text = template.render(context)
+    config = pdfkit.configuration(wkhtmltopdf='C:\Program Files\wkhtmltopdf\\bin\\wkhtmltopdf.exe')
+    pdfkit.from_string(output_text,
+                       f'C:\\Users\\4dtya\Pycharmprojects\\trainspot1111\personal_report_{user_id}.pdf',
+                       configuration=config,
+                       css='C:\\Users\\4dtya\Pycharmprojects\\trainspot1111\\trainspot\static\pdf\\user_report\\report.css')
+
+
+def get_overall_report_pdf(context):
+    template_loader = jinja2.FileSystemLoader('C:\\Users\\4dtya\Pycharmprojects\\trainspot1111\\trainspot\static\pdf\\company_report')
+    template_env = jinja2.Environment(loader=template_loader)
+    template = template_env.get_template('report.html')
+    output_text = template.render(context)
+    config = pdfkit.configuration(wkhtmltopdf='C:\Program Files\wkhtmltopdf\\bin\\wkhtmltopdf.exe')
+    pdfkit.from_string(output_text,
+                       f'C:\\Users\\4dtya\Pycharmprojects\\trainspot1111\overall_report.pdf',
+                       configuration=config,
+                       css='C:\\Users\\4dtya\Pycharmprojects\\trainspot1111\\trainspot\static\pdf\\company_report\\report.css')
+
+
+
 class FinancialRecordViewSet(viewsets.ModelViewSet):
     queryset = FinancialRecord.objects.all()
     serializer_class = FinancialRecordSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+
+    def _download_personal_report(self, user):
+        finances = FinancialRecord.objects.filter(user=user)
+        data = {
+            'user': user,
+            'finances': sorted(finances, key=lambda f: f.date),
+            'sum': sum([f.amount for f in finances]),
+            'today': str(timezone.now())[0:11]
+        }
+        get_personal_report_pdf(data)
+        file_handle = open(f'C:\\Users\\4dtya\Pycharmprojects\\trainspot1111\personal_report_{user.id}.pdf', "rb")
+        response = FileResponse(file_handle, content_type='application/pdf')
+        response['Content-Length'] = os.stat(
+            f"C:\\Users\\4dtya\Pycharmprojects\\trainspot1111\personal_report_{user.id}.pdf").st_size
+        response['Content-Disposition'] = f'attachment; filename="personal_report_{user.id}.pdf"'
+        print(response['Content-Disposition'])
+        return response
+
+
+    def _download_overall_report(self, start=None, end=None):
+        if start:
+            finances = sorted(FinancialRecord.objects.filter(date__range=(start, end)),
+                              key=lambda f: f.date)
+
+
+            records = FinancialRecord.objects.filter(date__range=(start, end)).annotate(
+                month=TruncMonth('date')
+            ).values('month').annotate(
+                total_income=Sum(
+                    Case(When(type=FinancialRecord.INCOME, then=F('amount')), default=0, output_field=DecimalField())
+                ),
+                total_expense=Sum(
+                    Case(When(type=FinancialRecord.EXPENSE, then=F('amount')), default=0, output_field=DecimalField())
+                )
+            ).annotate(
+                total_profit=F('total_income') - F('total_expense')
+            ).order_by('month')
+        else:
+            start = 'открытия'
+            end = 'текущий момент'
+            finances = sorted(FinancialRecord.objects.all(),
+                              key=lambda f: f.date)
+            records = FinancialRecord.objects.all().annotate(
+                month=TruncMonth('date')
+            ).values('month').annotate(
+                total_income=Sum(
+                    Case(When(type=FinancialRecord.INCOME, then=F('amount')), default=0, output_field=DecimalField())
+                ),
+                total_expense=Sum(
+                    Case(When(type=FinancialRecord.EXPENSE, then=F('amount')), default=0, output_field=DecimalField())
+                )
+            ).annotate(
+                total_profit=F('total_income') - F('total_expense')
+            ).order_by('month')
+
+        for r in records:
+            month = FinancialRecord(user_id=1, date=r['month'], amount=r['total_profit'],
+                                    description=f'<b>Итог месяца {r["month"].month}</b>', type=3)
+            month.date = month.date.replace(day=monthrange(month.date.year, month.date.month)[1])
+            finances.append(month)
+
+        data = {
+            'finances': sorted(finances, key=lambda f: f.date),
+            'sum': sum([f.amount for f in finances if f.type == 1]) - sum([f.amount for f in finances if f.type == 2]),
+            'today': str(timezone.now())[0:11],
+            'start': start,
+            'end': end
+        }
+        get_overall_report_pdf(data)
+        file_handle = open(f'C:\\Users\\4dtya\Pycharmprojects\\trainspot1111\overall_report.pdf', "rb")
+        response = FileResponse(file_handle, content_type='application/pdf')
+        response['Content-Length'] = os.stat(
+            f"C:\\Users\\4dtya\Pycharmprojects\\trainspot1111\overall_report.pdf").st_size
+        response['Content-Disposition'] = f'attachment; filename="overall_report.pdf"'
+        print(response)
+        return response
+
+
+    @action(methods=['GET'], detail=True, renderer_classes=(PassthroughRenderer,))
+    def download(self, request, *args, **kwargs):
+        print(request)
+        user = request.user
+        if user.role == 'client':
+            print('client')
+            return self._download_personal_report(user)
+        else:
+            try:
+                return self._download_overall_report(request.GET['start'], request.GET['end'])
+            except MultiValueDictKeyError:
+                return self._download_overall_report()
+
+
+    def list(self, request, *args, **kwargs):
+        user = request.user
+        if user.role == 'client':
+            queryset = FinancialRecord.objects.filter(user=user)
+            serializer = FinancialRecordSerializer(queryset, many=True)
+            return Response(serializer.data)
+        else:
+            queryset = FinancialRecord.objects.all()
+            serializer = FinancialRecordSerializer(queryset, many=True)
+            return Response(serializer.data)
 
 
 class ExerciseViewSet(viewsets.ModelViewSet):

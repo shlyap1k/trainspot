@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+</head>
+<body>
+<div class="page-container">Page of</div>
+<table class="invoice-info-container">
+<tbody>
+<tr>
+<td class="client-name" rowspan="2">{{ user.first_name }} {{user.last_name}}</td>
+<td>TrainSpot</td>
+</tr>
+<tr>
+</tbody>
+</table>
+<h1>
+    Отчёт
+</h1>
+<table class="line-items-container">
+<thead>
+<tr>
+<th class="heading-quantity">&nbsp;</th>
+<th class="heading-description">Описание</th>
+<th class="heading-price">Дата</th>
+<th class="heading-subtotal">Цена</th>
+</tr>
+</thead>
+<tbody>
+{% for i in finances %}
+    <tr>
+    <td>&nbsp;</td>
+    <td>Покупка абонемента</td>
+    <td class="right">{{ i.date }}</td>
+    <td class="bold">{{i.amount}}</td>
+    </tr>
+{% endfor %}
+</tbody>
+</table>
+<table class="line-items-container has-bottom-border">
+<thead>
+<tr>
+<th>Информация</th>
+<th></th>
+<th>Сумма</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="payment-info">
+<div>Клиент: <strong>{{user.username}}</strong></div>
+</td>
+<td class="large">{{today}}</td>
+<td class="large total">{{sum}}</td>
+</tr>
+</tbody>
+</table>
+<div class="footer">
+<div class="footer-info">info@localhost:8000 | 8 (123) 123 4567 | localhost:8000</div>
+<div class="footer-thanks">Спасибо!</div>
+</div>
+</body>
+</html>

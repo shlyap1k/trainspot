@@ -1,5 +1,5 @@
 <template>
-  <div v-if="user && subscription">
+  <div v-if="user">
     <user-info :user="user" :subscription="subscription" />
   </div>
 </template>
@@ -12,7 +12,7 @@
     modules: [UserInfo],
     mounted() {
       this.$store.dispatch("user/fetchUser")
-      this.$store.dispatch("user/fetchSubscription")
+      this.$store.dispatch("user/fetchSubscription", {userId: this.$store.state.user.data.id})
     },
     user() {
       return this.$store.state.user.data

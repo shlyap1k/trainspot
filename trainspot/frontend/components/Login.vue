@@ -1,51 +1,58 @@
 <template>
-   <v-app >
-      <v-main>
-         <v-container fluid fill-height>
-            <v-layout align-center justify-center>
-               <v-flex xs12 sm8 md4>
-                  <v-card class="elevation-12">
-                     <v-toolbar dark color="primary">
-                        <v-toolbar-title>Вход</v-toolbar-title>
-                     </v-toolbar>
-                     <v-card-text>
-                     <form ref="form" @submit.prevent="logInUser(userData)">
-                            <v-text-field
-                              v-model="userData.login"
-                              name="username"
-                              label="логин"
-                              type="text"
-                              placeholder="username"
-                              required
-                           ></v-text-field>
-
-                            <v-text-field
-                              v-model="userData.password"
-                              name="password"
-                              label="пароль"
-                              type="password"
-                              placeholder="password"
-                              :append-icon="
-                                userData.showPassword ? 'mdi-eye-off' : 'mdi-eye'
-                              "
-                              :type="userData.showPassword ? 'text' : 'password'"
-                              required
-                           ></v-text-field>
-                           <v-btn type="submit" class="mt-4" color="primary" value="log in">войти</v-btn>
-                      </form>
-                     </v-card-text>
-                  </v-card>
-
-               </v-flex>
-            </v-layout>
-         </v-container>
-      </v-main>
-   </v-app>
+  <div class="login-page">
+    <v-container>
+      <v-layout flex align-center justify-center>
+        <v-flex xs4 sm4 elevation-4>
+          <v-card>
+            <div class="d-flex align-center justify-space-between">
+            <v-card-title flex align-center justify-center>
+              <h1>Авторизация</h1>
+            </v-card-title>
+            <register/>
+            </div>
+            <v-card-text class="pt-4">
+              <div>
+                <v-form ref="form">
+                  <v-text-field
+                    v-model="userData.login"
+                    label="Введите ваш логин"
+                    counter
+                    required
+                  ></v-text-field>
+                  <v-text-field
+                    v-model="userData.password"
+                    label="Введите ваш пароль"
+                    required
+                    :append-icon="
+                      userData.showPassword ? 'mdi-eye' : 'mdi-eye-off'
+                    "
+                    :type="userData.showPassword ? 'text' : 'password'"
+                    @click:append="
+                      userData.showPassword = !userData.showPassword
+                    "
+                  ></v-text-field>
+                  <v-layout justify-space-between>
+                    <v-btn @click="logInUser(userData)">
+                      Войти
+                    </v-btn>
+                  </v-layout>
+                </v-form>
+              </div>
+            </v-card-text>
+          </v-card>
+        </v-flex>
+      </v-layout>
+    </v-container>
+  </div>
 </template>
 
 <script>
+  import Register from "@/components/Register.vue";
 export default {
   name: "Login",
+  components: {
+    Register
+  },
   data: () => ({
     userData: { login: '', password: '', showPassword: false },
   }),

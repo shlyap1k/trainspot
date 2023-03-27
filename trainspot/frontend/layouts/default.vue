@@ -82,8 +82,7 @@ export default {
   name: 'DefaultLayout',
   mounted() {
       this.$store.dispatch("user/fetchUser")
-    // this.$store.dispatch("user/fetchUser")
-      this.$store.dispatch("user/fetchSubscription")
+      // this.$store.dispatch("user/fetchSubscription", {userId: this.$store.state.user.data.id})
       this.$store.dispatch("user/fetchChats")
     },
   computed: {
