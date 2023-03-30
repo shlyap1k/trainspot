@@ -107,12 +107,22 @@ export default {
           title: 'Войти',
           to: '/login'
         },
+        {
+          icon: 'mdi-clipboard-list',
+          title: 'Список цен',
+          to: '/pricelist'
+        }
       ],
       authenticatedItems: [
         {
           icon: 'mdi-apps',
           title: 'Главная',
           to: '/'
+        },
+        {
+          icon: 'mdi-clipboard-list',
+          title: 'Список цен',
+          to: '/pricelist'
         },
         {
           title: 'gyms',
