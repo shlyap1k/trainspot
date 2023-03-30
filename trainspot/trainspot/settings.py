@@ -29,6 +29,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+WKHTMLTOPDF_PATH = "C:\Program Files\wkhtmltopdf\\bin\\wkhtmltopdf.exe"
 
 # Application definition
 

@@ -70,6 +70,15 @@ auth: {
         login: '/login'
     },
 },
+routes: [
+  {
+    path: '/pricelist',
+    component: 'pages/pricelist.vue',
+    meta: {
+      public: true
+    }
+  }
+],
 router: {
     middleware: ['auth']
 },

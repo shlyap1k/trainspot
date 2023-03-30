@@ -127,15 +127,15 @@ class PassthroughRenderer(renderers.BaseRenderer):
 
 
 def get_pricelist_pdf(context):
-    template_loader = jinja2.FileSystemLoader('C:\\Users\\4dtya\Pycharmprojects\\trainspot1111\\trainspot\static\pdf\\price_list')
+    template_loader = jinja2.FileSystemLoader(f'{os.getcwd()}/trainspot/static/pdf/price_list')
     template_env = jinja2.Environment(loader=template_loader)
     template = template_env.get_template('price_list.html')
     output_text = template.render(context)
-    config = pdfkit.configuration(wkhtmltopdf='C:\Program Files\wkhtmltopdf\\bin\\wkhtmltopdf.exe')
+    config = pdfkit.configuration(wkhtmltopdf=settings.WKHTMLTOPDF_PATH)
     pdfkit.from_string(output_text,
-                       f'C:\\Users\\4dtya\Pycharmprojects\\trainspot1111\price_list.pdf',
+                       f'{os.getcwd()}/price_list.pdf',
                        configuration=config,
-                       css='C:\\Users\\4dtya\Pycharmprojects\\trainspot1111\\trainspot\static\pdf\\price_list\\price_list.css')
+                       css=f'{os.getcwd()}/trainspot/static/pdf/price_list/price_list.css')
 
 
 class PlanViewSet(viewsets.ModelViewSet):
@@ -153,10 +153,10 @@ class PlanViewSet(viewsets.ModelViewSet):
         plans = Plan.objects.all()
         context = {"plans": plans}
         get_pricelist_pdf(context)
-        file_handle = open(f'C:\\Users\\4dtya\Pycharmprojects\\trainspot1111\price_list.pdf', "rb")
+        file_handle = open(f'{os.getcwd()}/price_list.pdf', "rb")
         response = FileResponse(file_handle, content_type='application/pdf')
         response['Content-Length'] = os.stat(
-            f"C:\\Users\\4dtya\Pycharmprojects\\trainspot1111\price_list.pdf").st_size
+            f"{os.getcwd()}/price_list.pdf").st_size
         response['Content-Disposition'] = f'attachment; filename="price_list.pdf"'
         print(response['Content-Disposition'])
         return response
@@ -173,27 +173,28 @@ class SubscriptionViewSet(viewsets.ModelViewSet):
 
 def get_personal_report_pdf(context):
     user_id = context['user'].id
-    template_loader = jinja2.FileSystemLoader('C:\\Users\\4dtya\Pycharmprojects\\trainspot1111\\trainspot\static\pdf\\user_report')
+    template_loader = jinja2.FileSystemLoader(f'{os.getcwd()}/trainspot/static/pdf/user_report')
     template_env = jinja2.Environment(loader=template_loader)
     template = template_env.get_template('report.html')
     output_text = template.render(context)
-    config = pdfkit.configuration(wkhtmltopdf='C:\Program Files\wkhtmltopdf\\bin\\wkhtmltopdf.exe')
+    config = pdfkit.configuration(wkhtmltopdf=settings.WKHTMLTOPDF_PATH)
     pdfkit.from_string(output_text,
-                       f'C:\\Users\\4dtya\Pycharmprojects\\trainspot1111\personal_report_{user_id}.pdf',
+                       f'{os.getcwd()}/personal_report_{user_id}.pdf',
                        configuration=config,
-                       css='C:\\Users\\4dtya\Pycharmprojects\\trainspot1111\\trainspot\static\pdf\\user_report\\report.css')
+                       css=f'{os.getcwd()}/trainspot/static/pdf/user_report/report.css')
 
 
 def get_overall_report_pdf(context):
-    template_loader = jinja2.FileSystemLoader('C:\\Users\\4dtya\Pycharmprojects\\trainspot1111\\trainspot\static\pdf\\company_report')
+    print(os.getcwd())
+    template_loader = jinja2.FileSystemLoader(f'{os.getcwd()}/trainspot/static/pdf/company_report')
     template_env = jinja2.Environment(loader=template_loader)
     template = template_env.get_template('report.html')
     output_text = template.render(context)
-    config = pdfkit.configuration(wkhtmltopdf='C:\Program Files\wkhtmltopdf\\bin\\wkhtmltopdf.exe')
+    config = pdfkit.configuration(wkhtmltopdf=settings.WKHTMLTOPDF_PATH)
     pdfkit.from_string(output_text,
-                       f'C:\\Users\\4dtya\Pycharmprojects\\trainspot1111\overall_report.pdf',
+                       f'{os.getcwd()}/overall_report.pdf',
                        configuration=config,
-                       css='C:\\Users\\4dtya\Pycharmprojects\\trainspot1111\\trainspot\static\pdf\\company_report\\report.css')
+                       css=f'{os.getcwd()}/trainspot/static/pdf/company_report/report.css')
 
 
 
@@ -212,10 +213,10 @@ class FinancialRecordViewSet(viewsets.ModelViewSet):
             'today': str(timezone.now())[0:11]
         }
         get_personal_report_pdf(data)
-        file_handle = open(f'C:\\Users\\4dtya\Pycharmprojects\\trainspot1111\personal_report_{user.id}.pdf', "rb")
+        file_handle = open(f'{os.getcwd()}\personal_report_{user.id}.pdf', "rb")
         response = FileResponse(file_handle, content_type='application/pdf')
         response['Content-Length'] = os.stat(
-            f"C:\\Users\\4dtya\Pycharmprojects\\trainspot1111\personal_report_{user.id}.pdf").st_size
+            f"{os.getcwd()}\personal_report_{user.id}.pdf").st_size
         response['Content-Disposition'] = f'attachment; filename="personal_report_{user.id}.pdf"'
         print(response['Content-Disposition'])
         return response
@@ -271,10 +272,10 @@ class FinancialRecordViewSet(viewsets.ModelViewSet):
             'end': end
         }
         get_overall_report_pdf(data)
-        file_handle = open(f'C:\\Users\\4dtya\Pycharmprojects\\trainspot1111\overall_report.pdf', "rb")
+        file_handle = open(f'{os.getcwd()}/overall_report.pdf', "rb")
         response = FileResponse(file_handle, content_type='application/pdf')
         response['Content-Length'] = os.stat(
-            f"C:\\Users\\4dtya\Pycharmprojects\\trainspot1111\overall_report.pdf").st_size
+            f"{os.getcwd()}/overall_report.pdf").st_size
         response['Content-Disposition'] = f'attachment; filename="overall_report.pdf"'
         print(response)
         return response
