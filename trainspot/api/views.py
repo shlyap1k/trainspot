@@ -143,7 +143,7 @@ class PlanViewSet(viewsets.ModelViewSet):
     serializer_class = PlanSerializer
     # permission_classes = [permissions.IsAuthenticated]
     def get_permissions(self):
-        if self.action == 'list':
+        if self.action == 'list' or self.action == 'download':
             return [ReadOnlyOrAuthenticated()]
         else:
             return [IsAuthenticated()]
