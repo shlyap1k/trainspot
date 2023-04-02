@@ -74,12 +74,17 @@ class Inventory(models.Model):
 
 
 #  models for subscription
+class PlanType(models.Model):
+    name = models.CharField(max_length=100)
+
+
 class Plan(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     duration_days = models.PositiveIntegerField()
     visits_count = models.PositiveIntegerField()
+    plan_type = models.ForeignKey(PlanType, on_delete=models.CASCADE, null=True)
 
 
 class Subscription(models.Model):
@@ -115,6 +120,7 @@ class FinancialRecord(models.Model):
     amount = models.DecimalField(max_digits=8, decimal_places=2)
     description = models.CharField(max_length=255)
     type = models.PositiveSmallIntegerField(choices=FIN_CHOICES, blank=True, null=True)
+    plan = models.ForeignKey(Plan, on_delete=models.CASCADE, null=True)
 
 
 #  Models for training
