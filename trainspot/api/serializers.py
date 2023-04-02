@@ -96,10 +96,21 @@ class InventorySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class PlanTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PlanType
+        fields = '__all__'
+
+
 class PlanSerializer(serializers.ModelSerializer):
     class Meta:
         model = Plan
-        fields = '__all__'
+        fields = ['id', 'name', 'description', 'price', 'duration_days', 'visits_count', 'plan_type']
+
+    def to_representation(self, instance):
+        representation = super(PlanSerializer, self).to_representation(instance)
+        representation['plan_type'] = PlanTypeSerializer(instance.plan_type).data
+        return representation
 
 
 class SubscriptionSerializer(serializers.ModelSerializer):

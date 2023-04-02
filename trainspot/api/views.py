@@ -142,6 +142,11 @@ class PlanViewSet(viewsets.ModelViewSet):
     queryset = Plan.objects.all()
     serializer_class = PlanSerializer
     # permission_classes = [permissions.IsAuthenticated]
+
+    def paginate_queryset(self, queryset):
+        if 'limit' not in self.request.query_params:
+            return None
+        return super().paginate_queryset(queryset)
     def get_permissions(self):
         if self.action == 'list' or self.action == 'download':
             return [ReadOnlyOrAuthenticated()]

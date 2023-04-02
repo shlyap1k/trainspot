@@ -1,5 +1,7 @@
 <template>
   <v-card>
+<!--    {{getPlans()}}-->
+    <price-list-charts :plans="plans"/>
     <iframe :src="pdfUrl" style="width:100%;height:800px;"></iframe>
   </v-card>
 </template>
@@ -7,15 +9,21 @@
 <script>
 import axios from "axios";
 import apiClient from "@/src/apiClient";
+import PriceListCharts from "@/components/PriceListCharts.vue";
 
 export default {
   data() {
     return {
-      pdfUrl: ""
+      pdfUrl: "",
+      plans: []
     }
+  },
+  components: {
+    PriceListCharts
   },
   mounted() {
     this.downloadPdfFile();
+    this.getPlans();
   },
   methods: {
     downloadPdfFile() {
@@ -42,6 +50,14 @@ export default {
         document.body.appendChild(link);
         // link.click();
       });
+    },
+    getPlans() {
+      apiClient
+        .get("plans/")
+        .then(response => {
+          this.plans = response.data
+        })
+
     }
   }
 };
