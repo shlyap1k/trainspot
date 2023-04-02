@@ -61,9 +61,6 @@
 
     },
     methods: {
-      init () {
-        // TODO: тут будет запрос с фильтром (в гет парамтере)
-      },
       test() {
         this.chartData = [ ['Название', 'Цена'] ]
         const filtered = this.plans.filter(plan => plan.plan_type.name === this.type_id)

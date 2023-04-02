@@ -1,98 +1,40 @@
 <template>
-<div>
-  <v-container>
-    <v-layout flex align-center justify-center>
-      <v-flex xs4 sm5 elevation-4>
-        <v-card class="">
-          <v-card-title v-if="role === 'admin'">
-            Показать отчет о работе зала
-          </v-card-title>
-          <v-card-title v-else>
-            Показать отчет
-          </v-card-title>
-          <v-card-subtitle>
-            Сформировать отчёт
-          </v-card-subtitle>
-          <v-card-actions v-if="role === 'admin'">
-            <v-layout row wrap>
-              <v-spacer></v-spacer>
-              <v-flex>
-                <v-menu
-                  ref="menu1"
-                  v-model="menu1"
-                  :close-on-content-click="false"
-                  :nudge-right="40"
-                  lazy
-                  transition="scale-transition"
-                  offset-y
-                  full-width
-                  max-width="290px"
-                  min-width="290px"
-                >
-                  <template v-slot:activator="{ on }">
-                    <v-text-field
-                      v-model="date1"
-                      label="начиная с"
-                      hint="YYYY/MM/DD формат"
-                      persistent-hint
-                      readonly
-                      @blur="date = parseDate(dateFormatted)"
-                      v-on="on"
-                    ></v-text-field>
-                  </template>
-                  <v-date-picker v-model="date1" no-title @input="menu1 = false"></v-date-picker>
-                </v-menu>
-              </v-flex>
-              <v-spacer></v-spacer>
-              <v-flex>
-                <v-menu
-                  v-model="menu2"
-                  :close-on-content-click="false"
-                  :nudge-right="40"
-                  lazy
-                  transition="scale-transition"
-                  offset-y
-                  full-width
-                  max-width="290px"
-                  min-width="290px"
-                >
-                  <template v-slot:activator="{ on }">
-                    <v-text-field
-                      v-model="date2"
-                      label="и до"
-                      hint="YYYY/MM/DD формат"
-                      persistent-hint
-                      readonly
-                      v-on="on"
-                    ></v-text-field>
-                  </template>
-                  <v-date-picker v-model="date2" no-title @input="menu2 = false"></v-date-picker>
-                </v-menu>
-              </v-flex>
-              <v-spacer></v-spacer>
-            </v-layout>
-            <v-spacer></v-spacer>
-          </v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn @click="getpdf()">
-            получить файл
-          </v-btn>
-          <iframe v-if="pdfUrl" :src="pdfUrl" style="width:100%;height:800px;"></iframe>
-        </v-card>
-      </v-flex>
-    </v-layout>
-  </v-container>
-</div>
+  <div>
+  <v-row>
+    <v-col v-if="role==='admin'">
+      <v-container>
+        <v-layout flex align-left justify-center>
+          <v-flex xs4 sm10 elevation-4>
+            <profit-plot/>
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </v-col>
+    <v-col>
+    <v-container>
+      <v-layout flex align-right justify-center>
+        <v-flex xs6 sm10 elevation-4>
+          <get-pdf-report/>
+        </v-flex>
+      </v-layout>
+    </v-container>
+    </v-col>
+  </v-row>
+  </div>
 </template>
 
 <script>
   import apiClient from "@/src/apiClient";
-  import axios from "axios";
   import {mapGetters} from "vuex";
-  import * as vm from "vm";
+  import GetPdfReport from "@/components/GetPdfReport.vue";
+  import ProfitPlot from "@/components/ProfitPlot.vue";
 
   export default {
     name: "reports",
+    components: {
+      GetPdfReport,
+      ProfitPlot
+    },
     data() {
       return {
         file: null,

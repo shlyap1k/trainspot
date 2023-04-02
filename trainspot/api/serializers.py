@@ -137,6 +137,7 @@ class FinancialRecordSerializer(serializers.ModelSerializer):
     class Meta:
         model = FinancialRecord
         fields = '__all__'
+        ordering = ['date']
 
 
 class ExerciseSerializer(serializers.ModelSerializer):

@@ -303,11 +303,11 @@ class FinancialRecordViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         user = request.user
         if user.role == 'client':
-            queryset = FinancialRecord.objects.filter(user=user)
+            queryset = FinancialRecord.objects.filter(user=user).order_by('date')
             serializer = FinancialRecordSerializer(queryset, many=True)
             return Response(serializer.data)
         else:
-            queryset = FinancialRecord.objects.all()
+            queryset = FinancialRecord.objects.all().order_by('date')
             serializer = FinancialRecordSerializer(queryset, many=True)
             return Response(serializer.data)
 
