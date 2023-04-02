@@ -139,6 +139,11 @@ class FinancialRecordSerializer(serializers.ModelSerializer):
         fields = '__all__'
         ordering = ['date']
 
+    def to_representation(self, instance):
+        representation = super(FinancialRecordSerializer, self).to_representation(instance)
+        representation['plan'] = PlanSerializer(instance.plan).data
+        return representation
+
 
 class ExerciseSerializer(serializers.ModelSerializer):
     class Meta:

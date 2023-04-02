@@ -10,6 +10,15 @@
         </v-layout>
       </v-container>
     </v-col>
+    <v-col v-if="role==='client'">
+      <v-container>
+        <v-layout flex align-left justify-center>
+          <v-flex xs4 sm10 elevation-4>
+            <expenses-by-categories-pie/>
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </v-col>
     <v-col>
     <v-container>
       <v-layout flex align-right justify-center>
@@ -28,12 +37,14 @@
   import {mapGetters} from "vuex";
   import GetPdfReport from "@/components/GetPdfReport.vue";
   import ProfitPlot from "@/components/ProfitPlot.vue";
+  import ExpensesByCategoriesPie from "@/components/ExpensesByCategoriesPie.vue";
 
   export default {
     name: "reports",
     components: {
       GetPdfReport,
-      ProfitPlot
+      ProfitPlot,
+      ExpensesByCategoriesPie
     },
     data() {
       return {

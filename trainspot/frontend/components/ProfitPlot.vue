@@ -15,12 +15,6 @@
     components: {
       GChart
     },
-    props: {
-      // profit: {
-      //   type: Array,
-      //   required: true
-      // }
-    },
     data() {
       return {
         type: 'LineChart',
@@ -45,7 +39,6 @@
     },
     methods: {
       getData() {
-        console.log(this.rawData)
         this.rawData.forEach(function(part, index) {
           this[index].date = this[index].date.split('-');
           this[index].date.pop()
@@ -60,9 +53,7 @@
           }
           return r;
         },{}))
-        console.log(result)
 
-        console.log(this.data)
         result.forEach(r => {
           this.data.push([r.date, r.income, r.expenses])
         })
