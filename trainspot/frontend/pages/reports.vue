@@ -1,6 +1,50 @@
 <template>
   <div>
-    <v-row>
+    <v-row v-if="role==='admin'">
+      <v-col cols="4">
+        <v-container>
+          <v-layout flex align-left justify-center>
+            <v-flex xs4 sm12 elevation-4>
+              <v-card>
+                <v-card-title>
+                  Количество заказов
+                </v-card-title>
+                <v-card-text>
+                  <purchases-count-plot/>
+                </v-card-text>
+              </v-card>
+            </v-flex>
+          </v-layout>
+        </v-container>
+      </v-col>
+      <v-col cols="4">
+        <v-container>
+          <v-layout flex align-left justify-center>
+            <v-flex xs4 sm10 elevation-4>
+              <v-card>
+                <v-card-title>
+                  Сумма заказов
+                </v-card-title>
+              </v-card>
+            </v-flex>
+          </v-layout>
+        </v-container>
+      </v-col>
+      <v-col cols="4">
+        <v-container>
+          <v-layout flex align-left justify-center>
+            <v-flex xs4 sm10 elevation-4>
+              <v-card>
+                <v-card-title>
+                  Новые пользователи
+                </v-card-title>
+              </v-card>
+            </v-flex>
+          </v-layout>
+        </v-container>
+      </v-col>
+    </v-row>
+    <v-row v-if="role==='admin'">
       <v-container>
         <v-layout flex align-left justify-center>
           <v-flex xs4 sm10 elevation-4>
@@ -9,8 +53,7 @@
         </v-layout>
       </v-container>
     </v-row>
-  <v-row>
-    <v-col v-if="role==='admin'">
+    <v-row v-if="role==='admin'">
       <v-container>
         <v-layout flex align-left justify-center>
           <v-flex xs4 sm10 elevation-4>
@@ -18,8 +61,8 @@
           </v-flex>
         </v-layout>
       </v-container>
-    </v-col>
-    <v-col v-if="role==='client'">
+    </v-row>
+    <v-row v-if="role==='client'">
       <v-container>
         <v-layout flex align-left justify-center>
           <v-flex xs4 sm10 elevation-4>
@@ -27,17 +70,16 @@
           </v-flex>
         </v-layout>
       </v-container>
-    </v-col>
-    <v-col>
-    <v-container>
-      <v-layout flex align-right justify-center>
-        <v-flex xs6 sm10 elevation-4>
-          <get-pdf-report/>
-        </v-flex>
-      </v-layout>
-    </v-container>
-    </v-col>
-  </v-row>
+    </v-row>
+    <v-row>
+      <v-container>
+        <v-layout flex align-right justify-center>
+          <v-flex xs6 sm10 elevation-4>
+            <get-pdf-report/>
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </v-row>
   </div>
 </template>
 
@@ -48,6 +90,7 @@
   import ProfitPlot from "@/components/ProfitPlot.vue";
   import ExpensesByCategoriesPie from "@/components/ExpensesByCategoriesPie.vue";
   import StatisticalDynamics from "@/components/StatisticalDynamics.vue";
+  import PurchasesCountPlot from "@/components/PurchasesCountPlot.vue";
 
   export default {
     name: "reports",
@@ -55,7 +98,8 @@
       GetPdfReport,
       ProfitPlot,
       ExpensesByCategoriesPie,
-      StatisticalDynamics
+      StatisticalDynamics,
+      PurchasesCountPlot
     },
     data() {
       return {
