@@ -1,13 +1,13 @@
 <template>
   <div>
     <v-row v-if="role==='admin'">
-      <v-col cols="4">
+      <v-col cols="6">
         <v-container>
           <v-layout flex align-left justify-center>
             <v-flex xs4 sm12 elevation-4>
               <v-card>
                 <v-card-title>
-                  Количество заказов
+                  Динамика количества продаж
                 </v-card-title>
                 <v-card-text>
                   <purchases-count-plot/>
@@ -17,27 +17,33 @@
           </v-layout>
         </v-container>
       </v-col>
-      <v-col cols="4">
+      <v-col cols="6">
         <v-container>
           <v-layout flex align-left justify-center>
             <v-flex xs4 sm10 elevation-4>
               <v-card>
                 <v-card-title>
-                  Сумма заказов
+                  Динамика регистрации новых пользователей
                 </v-card-title>
+                <v-card-text>
+                  <new-users-plot/>
+                </v-card-text>
               </v-card>
             </v-flex>
           </v-layout>
         </v-container>
       </v-col>
-      <v-col cols="4">
+    </v-row>
+    <v-row v-if="role==='admin'">
+      <v-col>
         <v-container>
           <v-layout flex align-left justify-center>
             <v-flex xs4 sm10 elevation-4>
               <v-card>
                 <v-card-title>
-                  Новые пользователи
+                  Месячная динамика покупок отдельных типов абонементов
                 </v-card-title>
+                <statistics-by-types/>
               </v-card>
             </v-flex>
           </v-layout>
@@ -91,6 +97,8 @@
   import ExpensesByCategoriesPie from "@/components/ExpensesByCategoriesPie.vue";
   import StatisticalDynamics from "@/components/StatisticalDynamics.vue";
   import PurchasesCountPlot from "@/components/PurchasesCountPlot.vue";
+  import NewUsersPlot from "@/components/NewUsersPlot.vue";
+  import StatisticsByTypes from "@/components/StatisticsByTypes.vue";
 
   export default {
     name: "reports",
@@ -99,7 +107,9 @@
       ProfitPlot,
       ExpensesByCategoriesPie,
       StatisticalDynamics,
-      PurchasesCountPlot
+      PurchasesCountPlot,
+      NewUsersPlot,
+      StatisticsByTypes
     },
     data() {
       return {

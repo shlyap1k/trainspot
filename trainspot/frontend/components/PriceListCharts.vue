@@ -37,8 +37,7 @@
         ],
         chartOptions: {
           chart: {
-            title: 'Company Performance',
-            subtitle: 'Sales, Expenses, and Profit: 2014-2017',
+            title: 'Цены'
           }
         },
         plan_types: [],
@@ -67,7 +66,6 @@
         filtered.map(f => this.chartData.push([f.name, Number(f.price)]))
       },
       get_plan_types() {
-
         this.plans.map(element => {
           return this.plan_types.push(element.plan_type.name)
         });

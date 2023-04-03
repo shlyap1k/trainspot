@@ -151,7 +151,6 @@
             })
           prev = r
         })
-        console.log(this.data)
       }
     }
   }

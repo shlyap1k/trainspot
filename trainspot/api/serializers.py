@@ -27,7 +27,7 @@ class UserSerializer(serializers.ModelSerializer):
     # field_name = serializers.ChoiceField(*args, **kwargs)
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'specialization', 'role', 'trainer', 'clients']
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'specialization', 'role', 'trainer', 'clients', 'date_joined']
         # depth = 1
 
 
