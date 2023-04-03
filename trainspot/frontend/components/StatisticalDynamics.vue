@@ -26,22 +26,22 @@
           <tr>
             <th></th>
             <th></th>
-            <th class="text-left">
+            <th class="text-center">
               Цепной
             </th>
-            <th class="text-left">
+            <th class="text-center">
               Базисный
             </th>
-            <th class="text-left">
+            <th class="text-center">
               Цепной
             </th>
-            <th class="text-left">
+            <th class="text-center">
               Базисный
             </th>
-            <th class="text-left">
+            <th class="text-center">
               Цепной
             </th>
-            <th class="text-left">
+            <th class="text-center">
               Базисный
             </th>
           </tr>
@@ -50,12 +50,12 @@
           <tr v-for="item in data" :key="item.date">
             <td>{{ item.date }}</td>
             <td>{{ item.total }}</td>
-            <td>{{ item.abs_plus.chain_growth }}</td>
-            <td>{{ item.abs_plus.basis_growth }}</td>
-            <td>{{ item.growth_rate.chain_growth }}</td>
-            <td>{{ item.growth_rate.basis_growth }}</td>
-            <td>{{ item.increase_rate.chain_growth }}</td>
-            <td>{{ item.increase_rate.basis_growth }}</td>
+            <td class="text-center">{{ item.abs_plus.chain_growth }}</td>
+            <td class="text-center">{{ item.abs_plus.basis_growth }}</td>
+            <td class="text-center">{{ item.growth_rate.chain_growth }}</td>
+            <td class="text-center">{{ item.growth_rate.basis_growth }}</td>
+            <td class="text-center">{{ item.increase_rate.chain_growth }}</td>
+            <td class="text-center">{{ item.increase_rate.basis_growth }}</td>
           </tr>
         </tbody>
       </v-simple-table>

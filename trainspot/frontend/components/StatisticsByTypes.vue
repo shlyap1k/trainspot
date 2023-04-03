@@ -62,7 +62,6 @@
           this.data.push([r.date].concat(counts))
           counts = []
         })
-        console.log(this.data)
       },
       get_plan_types() {
         this.rawData.map(element => {
