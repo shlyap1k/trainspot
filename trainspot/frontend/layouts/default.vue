@@ -67,6 +67,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import 'vuetify/dist/vuetify.min.css'
 export default {
   name: 'DefaultLayout',
   mounted() {

@@ -1,5 +1,14 @@
 <template>
   <div>
+    <v-row>
+      <v-container>
+        <v-layout flex align-left justify-center>
+          <v-flex xs4 sm10 elevation-4>
+            <statistical-dynamics/>
+          </v-flex>
+        </v-layout>
+      </v-container>
+    </v-row>
   <v-row>
     <v-col v-if="role==='admin'">
       <v-container>
@@ -38,13 +47,15 @@
   import GetPdfReport from "@/components/GetPdfReport.vue";
   import ProfitPlot from "@/components/ProfitPlot.vue";
   import ExpensesByCategoriesPie from "@/components/ExpensesByCategoriesPie.vue";
+  import StatisticalDynamics from "@/components/StatisticalDynamics.vue";
 
   export default {
     name: "reports",
     components: {
       GetPdfReport,
       ProfitPlot,
-      ExpensesByCategoriesPie
+      ExpensesByCategoriesPie,
+      StatisticalDynamics
     },
     data() {
       return {
