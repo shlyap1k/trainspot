@@ -214,7 +214,6 @@ class Newsletter(models.Model):
     def save(self, *args, **kwargs):
         # вызов метода save() родительского класса, чтобы сохранить экземпляр модели
         super().save(*args, **kwargs)
-
         # отправка письма на почту
         subject = self.subject
         message = self.content
@@ -223,6 +222,3 @@ class Newsletter(models.Model):
                   'mail-for-test-sending-emails@yandex.ru',
                   [self.to_user.email],
                   fail_silently=False)
-
-
-# post_save.connect(send_email_on_post, sender=Newsletter)
