@@ -19,6 +19,9 @@
 </template>
 
 <script>
+import axios from "axios";
+import apiClient from "@/src/apiClient";
+
 export default {
   name: "BuyPlanForm",
   props: {
@@ -33,6 +36,50 @@ export default {
   methods: {
     buyPlan() {
       // TODO: send API request to buy the plan
+      try {
+        if (this.$store.state.user.subscription) {
+          this.$toast.info(`У вас уже есть действующий абонемент`);
+        } else {
+          const data = new FormData();
+          data.append("csrfmiddlewaretoken", this.$cookies.get("XSRF-TOKEN"))
+          data.append('visits_left', this.plan.visits_count)
+          data.append('user', this.$store.state.user.data.id)
+          data.append('plan', this.plan.id)
+          axios({
+              method: 'post',
+              url: 'http://localhost:8000/api/subscriptions/',
+              data: data,
+              withCredentials: true,
+              header: {
+                'Accept': 'application/json',
+                'Content-Type': 'multipart/form-data',
+              },
+          })
+          const data2 = new FormData();
+          data2.append("csrfmiddlewaretoken", this.$cookies.get("XSRF-TOKEN"))
+          data2.append('amount', this.plan.price)
+          data2.append('description', 'Покупка абонемента')
+          data2.append('type', 1)
+          data2.append('user', this.$store.state.user.data.id)
+          data2.append('plan', this.plan.id)
+          axios({
+              method: 'post',
+              url: 'http://localhost:8000/api/financialrecords/',
+              data: data2,
+              withCredentials: true,
+              header: {
+                'Accept': 'application/json',
+                'Content-Type': 'multipart/form-data',
+              },
+          })
+
+          this.$store.dispatch('user/fetchSubscription', {userId: this.$store.state.user.data.id})
+          this.$toast.success(`Абонемент куплен`);
+        }
+      } catch (error) {
+        // Выводим сообщение об ошибке
+        this.$toast.error(`Ошибка: ${error.message}`);
+      }
       this.closeDialog();
     },
     closeDialog() {

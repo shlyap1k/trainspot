@@ -26,7 +26,7 @@
             <v-btn
               color="blue-darken-1"
               icon
-              @click="dialog = false"
+              @click="closeDialog"
             >
               <v-icon>mdi-close</v-icon>
             </v-btn>
@@ -53,6 +53,10 @@
               </tbody>
             </template>
           </v-data-table>
+          <buy-plan-form
+            :dialog="modalVisible"
+            :plan="selectedPlan"
+          />
         </v-card-text>
       </v-card>
     </v-dialog>
@@ -101,6 +105,10 @@
         console.log(item.name)
         this.modalVisible = true
         this.selectedPlan = item
+      },
+      closeDialog() {
+        this.dialog = false
+        this.modalVisible = false
       }
     },
   }

@@ -110,6 +110,19 @@ class Subscription(models.Model):
         self.visits_left = plan.visits_count
         self.save()
 
+    def save(self, *args, **kwargs):
+        # вызов метода save() родительского класса, чтобы сохранить экземпляр модели
+        super().save(*args, **kwargs)
+        # отправка письма на почту
+        subject = 'Покупка абонемента'
+        message = f'Вы купили абонемент {self.plan.name} по цене {self.plan.price}. ' \
+                  f'У вас есть {self.visits_left} посещений на {self.plan.duration_days} дней'
+        send_mail(subject,
+                  message,
+                  'mail-for-test-sending-emails@yandex.ru',
+                  [self.user.email],
+                  fail_silently=False)
+
 
 #  model for financial records
 class FinancialRecord(models.Model):
