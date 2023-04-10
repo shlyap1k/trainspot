@@ -13,9 +13,12 @@
           </v-card-text>
         </v-card>
         <v-card>
-          <v-card-title flex align-center justify-center>
-            <h1>Абонемент</h1>
-          </v-card-title>
+          <div class="d-flex align-center justify-space-between">
+            <v-card-title>
+              <h1>Абонемент</h1>
+            </v-card-title>
+            <buy-plan/>
+          </div>
           <v-card-text class="pt-4" v-if="subscription">
             <p>Куплен: {{ subscription.start_date }}</p>
             <p>Осталось посещений: {{ subscription.visits_left }}</p>
@@ -28,8 +31,12 @@
 </template>
 
 <script>
+import BuyPlan from "@/components/BuyPlan.vue";
 export default {
   name: "UserInfo",
+  components: {
+    BuyPlan
+  },
   props: {
     user: {
       type: Object,
