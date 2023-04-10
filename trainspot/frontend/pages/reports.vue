@@ -1,93 +1,3 @@
-<!--<template>-->
-<!--  <div>-->
-<!--    <v-row v-if="role==='admin'" >-->
-<!--      <v-col cols="5">-->
-<!--        <v-container>-->
-<!--          <v-layout>-->
-<!--            <v-flex xs4 sm12 elevation-4>-->
-<!--              <v-card>-->
-<!--                <v-card-title>-->
-<!--                  Динамика количества продаж-->
-<!--                </v-card-title>-->
-<!--                <v-card-text>-->
-<!--                  <purchases-count-plot/>-->
-<!--                </v-card-text>-->
-<!--              </v-card>-->
-<!--            </v-flex>-->
-<!--          </v-layout>-->
-<!--        </v-container>-->
-<!--      </v-col>-->
-<!--      <v-col cols="5">-->
-<!--        <v-container>-->
-<!--          <v-layout>-->
-<!--            <v-flex xs4 sm12 elevation-4>-->
-<!--              <v-card>-->
-<!--                <v-card-title>-->
-<!--                  Динамика регистрации новых пользователей-->
-<!--                </v-card-title>-->
-<!--                <v-card-text>-->
-<!--                  <new-users-plot/>-->
-<!--                </v-card-text>-->
-<!--              </v-card>-->
-<!--            </v-flex>-->
-<!--          </v-layout>-->
-<!--        </v-container>-->
-<!--      </v-col>-->
-<!--    </v-row>-->
-<!--    <v-row v-if="role==='admin'">-->
-<!--      <v-col>-->
-<!--        <v-container>-->
-<!--          <v-layout flex align-left justify-center>-->
-<!--            <v-flex xs4 sm10 elevation-4>-->
-<!--              <v-card>-->
-<!--                <v-card-title>-->
-<!--                  Динамика покупок отдельных типов абонементов-->
-<!--                </v-card-title>-->
-<!--                <statistics-by-types/>-->
-<!--              </v-card>-->
-<!--            </v-flex>-->
-<!--          </v-layout>-->
-<!--        </v-container>-->
-<!--      </v-col>-->
-<!--    </v-row>-->
-<!--    <v-row v-if="role==='admin'">-->
-<!--      <v-container>-->
-<!--        <v-layout flex align-left justify-center>-->
-<!--          <v-flex xs4 sm10 elevation-4>-->
-<!--            <statistical-dynamics/>-->
-<!--          </v-flex>-->
-<!--        </v-layout>-->
-<!--      </v-container>-->
-<!--    </v-row>-->
-<!--    <v-row v-if="role==='admin'">-->
-<!--      <v-container>-->
-<!--        <v-layout flex align-left justify-center>-->
-<!--          <v-flex xs4 sm10 elevation-4>-->
-<!--            <profit-plot/>-->
-<!--          </v-flex>-->
-<!--        </v-layout>-->
-<!--      </v-container>-->
-<!--    </v-row>-->
-<!--    <v-row v-if="role==='client'">-->
-<!--      <v-container>-->
-<!--        <v-layout flex align-left justify-center>-->
-<!--          <v-flex xs4 sm10 elevation-4>-->
-<!--            <expenses-by-categories-pie/>-->
-<!--          </v-flex>-->
-<!--        </v-layout>-->
-<!--      </v-container>-->
-<!--    </v-row>-->
-<!--    <v-row>-->
-<!--      <v-container>-->
-<!--        <v-layout flex align-right justify-center>-->
-<!--          <v-flex xs6 sm10 elevation-4>-->
-<!--            <get-pdf-report/>-->
-<!--          </v-flex>-->
-<!--        </v-layout>-->
-<!--      </v-container>-->
-<!--    </v-row>-->
-<!--  </div>-->
-<!--</template>-->
 <template>
   <div>
     <v-row>
@@ -97,6 +7,9 @@
             <v-card>
               <v-card-title>Динамика количества продаж</v-card-title>
               <v-card-text>
+                На графике отчетливо прослеживается изменение количества продаж в течении года.
+                В зимние и весенние месяцы наблюдается наибольший спрос, летом и осенью количество
+                продаж значительно меньше
                 <purchases-count-plot/>
               </v-card-text>
             </v-card>
@@ -105,6 +18,8 @@
             <v-card>
               <v-card-title>Динамика регистрации новых пользователей</v-card-title>
               <v-card-text>
+                В течение месяца не было существенных отклонений в числе новых регистраций,
+                за исключением резкого всплеска регистраций 14 марта, что может указывать на стабильность интереса.
                 <new-users-plot/>
               </v-card-text>
             </v-card>
@@ -115,6 +30,24 @@
             <v-card>
               <v-card-title>Динамика покупок отдельных типов абонементов</v-card-title>
               <v-card-text>
+                <v-list>
+                  <v-list-item>
+                    Наиболее популярным типом занятий являются самостоятельные занятия и групповые занятия.
+                    Оба типа занятий имеют высокие продажи на протяжении всего года.
+                  </v-list-item>
+                  <v-list-item>
+                    Персональные занятия с тренером имеют низкие продажи в течение года и не пользуются большой популярностью у клиентов.
+                  </v-list-item>
+                  <v-list-item>
+                    Единоборства также имеют низкие продажи, но они достигают пика в апреле месяце.
+                  </v-list-item>
+                  <v-list-item>
+                    Можно заметить сезонные колебания продаж: в начале года (январь-февраль) продажи обычно высокие, затем они падают к марту, затем немного восстанавливаются в апреле, затем снова снижаются до лета, после чего немного растут в августе-сентябре и снова падают к концу года.
+                  </v-list-item>
+                  <v-list-item>
+                    В целом, продажи абонементов по всем типам занятий низкие в марте 2023 года, когда были проданы только самостоятельные занятия.
+                  </v-list-item>
+                </v-list>
                 <statistics-by-types/>
               </v-card-text>
             </v-card>

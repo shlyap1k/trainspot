@@ -67,7 +67,7 @@
         </v-flex>
         <v-spacer></v-spacer>
         <v-btn @click="getpdf()">
-          получить файл
+          сформировать отчёт в pdf
         </v-btn>
       </v-layout>
       <v-spacer></v-spacer>

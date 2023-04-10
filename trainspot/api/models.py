@@ -1,9 +1,13 @@
 import datetime
 
+from django.core.mail import send_mail
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db.models.signals import post_save
 from django.utils import timezone
 from django.conf import settings
+
+from api.signals import send_email_on_post
 
 
 class Specialization(models.Model):
@@ -200,9 +204,25 @@ class MailingList(models.Model):
 
 
 class Newsletter(models.Model):
-    mailing_list = models.ForeignKey(MailingList, on_delete=models.CASCADE, related_name='newsletters')
+    mailing_list = models.ForeignKey(MailingList, on_delete=models.CASCADE, related_name='newsletters', null=True)
     subject = models.CharField(max_length=255)
     content = models.TextField()
     from_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_emails')
-    to_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_emails')
+    to_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_emails', null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        # вызов метода save() родительского класса, чтобы сохранить экземпляр модели
+        super().save(*args, **kwargs)
+
+        # отправка письма на почту
+        subject = self.subject
+        message = self.content
+        send_mail(subject,
+                  message,
+                  'mail-for-test-sending-emails@yandex.ru',
+                  [self.to_user.email],
+                  fail_silently=False)
+
+
+# post_save.connect(send_email_on_post, sender=Newsletter)

@@ -49,6 +49,7 @@
             r.date, r.newUsersCount
           ])
         })
+
       }
     }
   }

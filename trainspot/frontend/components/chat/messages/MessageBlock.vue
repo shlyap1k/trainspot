@@ -36,18 +36,14 @@
 </template>
 
 <script>
-  import ReactionsBlock from '@/components/chat/messages/ReactionsBlock.vue'
-  import ReactionsList from '@/components/chat/messages/ReactionsList.vue'
-  import ShowRelatedMessage from '@/components/chat/messages/ShowRelatedMessage.vue'
   import { mapGetters } from 'vuex'
   import apiClient from '@/src/apiClient'
   export default {
     name: "MessageBlock",
-    modules: [ReactionsBlock],
     components: {
-      ReactionsBlock,
-      ReactionsList,
-      ShowRelatedMessage,
+      ReactionsBlock: () => import('@/components/chat/messages/ReactionsBlock.vue'),
+      ReactionsList: () => import('@/components/chat/messages/ReactionsList.vue'),
+      ShowRelatedMessage: () => import('@/components/chat/messages/ShowRelatedMessage.vue'),
     },
     props: {
       message: {

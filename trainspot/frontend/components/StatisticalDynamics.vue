@@ -80,30 +80,6 @@
     },
     data () {
       return {
-        headers: [
-        {
-          text: 'Dessert',
-          align: 'start',
-          sortable: false,
-          value: 'name',
-          colspan: 2, // задаем свойство colspan равное 2
-        },
-        { text: 'Calories', value: 'calories', scope: 'col'},
-        { text: 'Fat (g)', value: 'fat', scope: 'col' },
-        { text: 'Carbs (g)', value: 'carbs' },
-        { text: 'Protein (g)', value: 'protein' },
-        { text: 'Iron (%)', value: 'iron' },
-      ],
-      desserts: [
-        {
-          name: 'Frozen Yogurt',
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
-          protein: 4.0,
-          iron: '1%',
-        },
-      ],
         rawData: null,
         data: [],
       }
@@ -118,6 +94,7 @@
           this[index].date.pop()
           this[index].date = this[index].date.join('-')
         }, this.rawData);
+
         let result = Object.values(this.rawData.reduce((r, o) => {
           r[o.date] = r[o.date] || {date: o.date, income : 0, expenses: 0};
           if (o.type == 1) {
@@ -135,7 +112,7 @@
               date: r.date,
               income: r.income,
               expenses: r.expenses,
-              total: r.income-r.expenses,
+              total: r.income - r.expenses,
               abs_plus: {
                 chain_growth: prev ? (r.income-r.expenses) - (prev.income-prev.expenses) : '-',
                 basis_growth: first ? (r.income-r.expenses) - (first.income-first.expenses) : '-'

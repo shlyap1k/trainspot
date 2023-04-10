@@ -48,6 +48,12 @@ INSTALLED_APPS = [
 
 AUTH_USER_MODEL = 'api.User'
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'mail-for-test-sending-emails@yandex.ru'
+EMAIL_HOST_PASSWORD = 'rmxascrcdjdwxwms'
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
