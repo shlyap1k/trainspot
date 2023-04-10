@@ -19,6 +19,7 @@
                 attach
                 label="Найти пользователя"
                 return-object
+                v-if="role==='admin'"
               >
                 <template v-slot:prepend-item>
                   <v-list-item>
@@ -95,7 +96,6 @@
         apiClient
           .get('users/')
           .then((response) => {
-            console.log(response.data)
             this.users = response.data.results.map(user => {
               return user
             })

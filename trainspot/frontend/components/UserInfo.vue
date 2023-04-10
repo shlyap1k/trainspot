@@ -12,11 +12,11 @@
             <p>Role: {{ user.role }}</p>
           </v-card-text>
         </v-card>
-        <v-card v-if="subscription">
+        <v-card>
           <v-card-title flex align-center justify-center>
             <h1>Абонемент</h1>
           </v-card-title>
-          <v-card-text class="pt-4">
+          <v-card-text class="pt-4" v-if="subscription">
             <p>Куплен: {{ subscription.start_date }}</p>
             <p>Осталось посещений: {{ subscription.visits_left }}</p>
             <p>Осталось дней: {{subscription.days_left}}</p>
@@ -35,10 +35,14 @@ export default {
       type: Object,
       required: true
     },
-    subscription: {
-      type: Object,
-      required: true
-    }
-  }
+  },
+  computed: {
+    subscription() {
+      return this.$store.state.user.subscription;
+    },
+  },
+  created() {
+    this.$store.dispatch("user/fetchSubscription", {userId: this.user.id})
+  },
 }
 </script>

@@ -1,7 +1,7 @@
 <template>
   <div v-if="user">
-    <user-info :user="user" :subscription="subscription" />
-    <appeal-form user="user"/>
+    <user-info :user="user"/>
+    <appeal-form :user="user"/>
   </div>
 </template>
 
@@ -17,7 +17,11 @@
     },
     mounted() {
       this.$store.dispatch("user/fetchUser")
-      this.$store.dispatch("user/fetchSubscription", {userId: this.$store.state.user.data.id})
+    },
+    methods: {
+      get_subscription() {
+        this.$store.dispatch("user/fetchSubscription", {userId: this.$store.state.user.data.id})
+      }
     },
     user() {
       return this.$store.state.user.data
