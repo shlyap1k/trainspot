@@ -60,7 +60,6 @@
             }).length)
           })
           this.data.push([r.date].concat(counts))
-          console.log(r.date + ' - ' + counts)
           counts = []
         })
       },

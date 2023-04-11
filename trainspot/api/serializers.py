@@ -232,8 +232,19 @@ class ChatSerializer(serializers.ModelSerializer):
 
 
 class MailingListSerializer(serializers.ModelSerializer):
+    subscribers = serializers.SerializerMethodField()
+
     class Meta:
         model = MailingList
+        fields = '__all__'
+
+    def get_subscribers(self, obj):
+        return UserSerializer(obj.subscribers.all(), many=True).data
+
+
+class MailingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Mailing
         fields = '__all__'
 
 

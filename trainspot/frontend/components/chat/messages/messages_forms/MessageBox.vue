@@ -73,15 +73,15 @@
             data.append("parent", this.reply_to.id)
           }
           axios({
-              method: 'post',
-              url: 'http://localhost:8000/api/messages/',
-              data: data,
-              withCredentials: true,
-              header: {
-                'Accept': 'application/json',
-                'Content-Type': 'multipart/form-data',
-              },
-            })
+            method: 'post',
+            url: 'http://localhost:8000/api/messages/',
+            data: data,
+            withCredentials: true,
+            header: {
+              'Accept': 'application/json',
+              'Content-Type': 'multipart/form-data',
+            },
+          })
           // apiClient.post('messages/', data)
           this.textMessage = '' // TODO добавить сообщение после отправки
           this.$store.dispatch('chat/fetchMessages', {chat: this.$store.state.user.chatId})

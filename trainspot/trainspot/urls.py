@@ -38,6 +38,7 @@ router.register(r'messages', views.MessageViewSet)
 router.register(r'reactions', views.ReactionViewSet)
 router.register(r'mailinglists', views.MailingListViewSet)
 router.register(r'newsletters', views.NewsletterViewSet)
+router.register(r'mailing', views.MailingViewSet)
 # router.register(r'groups', views.GroupViewSet)
 
 urlpatterns = [

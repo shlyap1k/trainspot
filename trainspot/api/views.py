@@ -8,7 +8,7 @@ from django.db.models import Sum, Case, When, F, DecimalField
 from django.db.models.functions import TruncYear, TruncMonth
 from django.http import HttpResponse, FileResponse
 from django.utils.datastructures import MultiValueDictKeyError
-from rest_framework import viewsets, renderers
+from rest_framework import viewsets, renderers, status
 from rest_framework import permissions
 from rest_framework.decorators import api_view, action
 from rest_framework.generics import get_object_or_404
@@ -381,9 +381,72 @@ class ReactionViewSet(viewsets.ModelViewSet):
         return Response(status=200)
 
 
+import logging
+
+logger = logging.getLogger(__name__)
 class MailingListViewSet(viewsets.ModelViewSet):
     queryset = MailingList.objects.all()
     serializer_class = MailingListSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        # Исключаем subscribers из полей, передаваемых для валидации
+        request_data = request.data.copy()
+        subscribers_data = request_data.pop('subscribers', [])
+        serializer = self.get_serializer(data=request_data)
+        serializer.is_valid(raise_exception=True)
+        mailing_list = self.perform_create(serializer)
+
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def delete(self, request, *args, **kwargs):
+        # Обработка DELETE-запроса
+        print('хуй')
+
+        print(f'Request Headers: {request.META}')
+        print(f'GET Params: {request.GET}')
+        print(f'POST Params: {request.POST}')
+        print(f'Request Body: {request.body}')
+        # Получение объекта модели, который нужно удалить
+        instance = self.get_object()
+
+        # ... ваша логика удаления объекта ...
+
+        # Возвращение успешного ответа
+        return Response({'status': 'success'}, status=status.HTTP_204_NO_CONTENT)
+    def destroy(self, request, *args, **kwargs):
+        print("ABOBA")
+        print(f'Request Headers: {request.META}')
+        print(f'GET Params: {request.GET}')
+        print(f'POST Params: {request.POST}')
+        print(f'Request Body: {request.body}')
+
+
+    @action(methods=['POST'], detail=True)
+    def subscribe(self, request, *args, **kwargs):
+        mailing_list = self.get_object()
+        user = request.user
+        if user:
+            mailing_list.subscribers.add(user)
+            return Response({'detail': 'Successfully subscribed.'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'detail': 'User is not authenticated.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+    @action(methods=['POST'], detail=True)
+    def unsubscribe(self, request, *args, **kwargs):
+        mailing_list = self.get_object()
+        user = request.user
+        if user:
+            mailing_list.subscribers.remove(user)
+            return Response({'detail': 'Successfully unsubscribed.'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'detail': 'User is not authenticated.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+class MailingViewSet(viewsets.ModelViewSet):
+    queryset = Mailing.objects.all()
+    serializer_class = MailingSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 
