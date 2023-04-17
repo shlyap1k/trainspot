@@ -11,14 +11,11 @@
       :data="chartData"
       :options="chartOptions"
     />
-<!--    {{test()}}-->
-<!--    {{get_plan_types()}}-->
   </div>
 </template>
 
 <script>
   import { GChart } from 'vue-google-charts/legacy'
-  // import apiClient from "@/src/apiClient";
   export default {
     name: "PriceListCharts",
     components: {

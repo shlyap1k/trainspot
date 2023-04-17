@@ -8,6 +8,7 @@ from django.db.models import Sum, Case, When, F, DecimalField
 from django.db.models.functions import TruncYear, TruncMonth
 from django.http import HttpResponse, FileResponse
 from django.utils.datastructures import MultiValueDictKeyError
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets, renderers, status
 from rest_framework import permissions
 from rest_framework.decorators import api_view, action
@@ -387,7 +388,7 @@ logger = logging.getLogger(__name__)
 class MailingListViewSet(viewsets.ModelViewSet):
     queryset = MailingList.objects.all()
     serializer_class = MailingListSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
     def create(self, request, *args, **kwargs):
         # Исключаем subscribers из полей, передаваемых для валидации
@@ -399,29 +400,6 @@ class MailingListViewSet(viewsets.ModelViewSet):
 
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-    def delete(self, request, *args, **kwargs):
-        # Обработка DELETE-запроса
-        print('хуй')
-
-        print(f'Request Headers: {request.META}')
-        print(f'GET Params: {request.GET}')
-        print(f'POST Params: {request.POST}')
-        print(f'Request Body: {request.body}')
-        # Получение объекта модели, который нужно удалить
-        instance = self.get_object()
-
-        # ... ваша логика удаления объекта ...
-
-        # Возвращение успешного ответа
-        return Response({'status': 'success'}, status=status.HTTP_204_NO_CONTENT)
-    def destroy(self, request, *args, **kwargs):
-        print("ABOBA")
-        print(f'Request Headers: {request.META}')
-        print(f'GET Params: {request.GET}')
-        print(f'POST Params: {request.POST}')
-        print(f'Request Body: {request.body}')
-
 
     @action(methods=['POST'], detail=True)
     def subscribe(self, request, *args, **kwargs):

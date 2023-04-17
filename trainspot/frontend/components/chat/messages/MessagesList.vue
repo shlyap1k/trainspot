@@ -36,7 +36,6 @@
 <script>
 import MessageBlock from "@/components/chat/messages/MessageBlock.vue";
 import MembersList from "@/components/chat/messages/MembersList.vue";
-import apiClient from "@/src/apiClient";
 
 import {mapGetters} from "vuex";
 // TODO добавить пользователя

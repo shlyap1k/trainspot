@@ -124,11 +124,14 @@
               'Accept': 'application/json',
               'Content-Type': 'multipart/form-data',
             },
-          })
+          }).then(response => {
+            this.$toast.success('Обращение успешно отправлено')
+        })
 
         this.appealText = ''
         this.subject = ''
         this.selectedUser = null
+
       },
       searchUsers (e) {
         this.usersCopy = [...this.users];

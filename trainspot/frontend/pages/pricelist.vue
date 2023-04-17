@@ -1,13 +1,11 @@
 <template>
   <v-card>
-<!--    {{getPlans()}}-->
     <price-list-charts :plans="plans"/>
     <iframe :src="pdfUrl" style="width:100%;height:800px;"></iframe>
   </v-card>
 </template>
 
 <script>
-import axios from "axios";
 import apiClient from "@/src/apiClient";
 import PriceListCharts from "@/components/PriceListCharts.vue";
 

@@ -129,7 +129,6 @@
           params: this.params,
           headers: {
             accept: 'application/pdf',
-            // params: this.params
           }
         }).then(response => {
           const blob = new Blob([response.data], {type: 'application/pdf'});
@@ -139,7 +138,6 @@
           link.href = url;
           link.setAttribute("download", "file.pdf");
           document.body.appendChild(link);
-          // link.click();
         });
       }
     },

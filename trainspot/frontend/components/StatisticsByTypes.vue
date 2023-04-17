@@ -3,7 +3,7 @@
 </template>
 
 <script>
-   import { GChart } from 'vue-google-charts/legacy'
+  import { GChart } from 'vue-google-charts/legacy'
   import apiClient from '@/src/apiClient'
   export default {
     name: "StatisticsByTypes",

@@ -29,8 +29,9 @@
               icon
               @click="deleteMailing(mailing.id)"
               v-if="role==='admin'"
+              color="red"
             >
-              <v-icon>mdi-close</v-icon>
+              <v-icon>mdi-delete</v-icon>
             </v-btn>
           </v-card-title>
           <v-card-subtitle v-if="role==='admin'">
