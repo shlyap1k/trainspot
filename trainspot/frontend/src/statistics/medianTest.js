@@ -1,7 +1,6 @@
 // Модификация 1: Критерий серий, основанный на медиане выборки
 // import normcdf from "@/src/statistics/normcdf";
 import {median} from "mathjs";
-import jStat from "jstat";
 import countSeries from "@/src/statistics/utils/countSeries";
 
 
