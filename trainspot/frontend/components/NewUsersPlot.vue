@@ -12,6 +12,8 @@
       :data="data"
     />
     <GChart :type="type" :data="predictedData" :options="optionsPredicted" />
+    <check-hypothesis :data="medianTestResult" v-if="medianTestResult"/>
+    <check-hypothesis :data="updownTestResult" v-if="updownTestResult"/>
   </div>
 </template>
 
@@ -21,13 +23,17 @@ import apiClient from '@/src/apiClient'
 import MovingAveragesTable from "@/components/MovingAveragesTable.vue";
 import restoreEdgeValues from '@/src/restoreEdgeValues'
 import predictValues from "@/src/predictValues";
+import CheckHypothesis from "@/components/CheckHypothesis.vue";
 import _ from 'lodash'
+import median_test from "@/src/statistics/medianTest";
+import updownTest from "@/src/statistics/updownTest";
 
 export default {
   name: "NewUsersPlot",
   components: {
     GChart,
-    MovingAveragesTable
+    MovingAveragesTable,
+    CheckHypothesis,
   },
   data() {
     return {
@@ -49,6 +55,19 @@ export default {
       rawData: []
     }
   },
+    computed: {
+      medianTestResult: function () {
+        if (this.data.length > 1) {
+          return median_test(this.data)
+        } else {
+          return null
+        }
+      },
+      updownTestResult: function () {
+        console.log(this.data)
+        return updownTest(this.data)
+      }
+    },
   created() {
     apiClient
       .get('users/')
@@ -57,8 +76,6 @@ export default {
         this.getData()
         this.data = restoreEdgeValues(this.data)
         this.predictedData = predictValues(this.data)
-        console.table(this.data)
-        console.table(this.predictedData)
       })
   },
   methods: {
