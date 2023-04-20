@@ -9,6 +9,7 @@
     <GChart :type="type" :data="predictedData" :options="optionsPredicted" />
     <check-hypothesis :data="medianTestResult" v-if="medianTestResult"/>
     <check-hypothesis :data="updownTestResult" v-if="updownTestResult"/>
+    <growth-curves :data="data" action-name="Число покупок"/>
   </div>
 </template>
 
@@ -18,15 +19,17 @@
   import apiClient from '@/src/apiClient'
   import restoreEdgeValues from '@/src/restoreEdgeValues'
   import predictValues from "@/src/predictValues";
-  import median_test from "@/src/statistics/medianTest";
-  import updownTest from "@/src/statistics/updownTest";
+  import median_test from "@/src/statistics/statisticsTests/medianTest";
+  import updownTest from "@/src/statistics/statisticsTests/updownTest";
   import CheckHypothesis from "@/components/CheckHypothesis.vue";
+  import GrowthCurves from "@/components/GrowthCurves.vue";
   export default {
     name: "PurchasesCountPlot",
     components: {
       GChart,
       MovingAveragesTable,
-      CheckHypothesis
+      CheckHypothesis,
+      GrowthCurves
     },
     data() {
       return {
@@ -57,7 +60,7 @@
         }
       },
       updownTestResult: function () {
-        console.log(this.data)
+        // console.log(this.data)
         return updownTest(this.data)
       }
     },

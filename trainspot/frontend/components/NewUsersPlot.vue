@@ -14,6 +14,7 @@
     <GChart :type="type" :data="predictedData" :options="optionsPredicted" />
     <check-hypothesis :data="medianTestResult" v-if="medianTestResult"/>
     <check-hypothesis :data="updownTestResult" v-if="updownTestResult"/>
+    <growth-curves :data="data" action-name="Количество новых пользователей"/>
   </div>
 </template>
 
@@ -25,8 +26,9 @@ import restoreEdgeValues from '@/src/restoreEdgeValues'
 import predictValues from "@/src/predictValues";
 import CheckHypothesis from "@/components/CheckHypothesis.vue";
 import _ from 'lodash'
-import median_test from "@/src/statistics/medianTest";
-import updownTest from "@/src/statistics/updownTest";
+import median_test from "@/src/statistics/statisticsTests/medianTest";
+import updownTest from "@/src/statistics/statisticsTests/updownTest";
+import GrowthCurves from "@/components/GrowthCurves.vue";
 
 export default {
   name: "NewUsersPlot",
@@ -34,6 +36,7 @@ export default {
     GChart,
     MovingAveragesTable,
     CheckHypothesis,
+    GrowthCurves
   },
   data() {
     return {
@@ -64,7 +67,7 @@ export default {
         }
       },
       updownTestResult: function () {
-        console.log(this.data)
+        // console.log(this.data)
         return updownTest(this.data)
       }
     },
