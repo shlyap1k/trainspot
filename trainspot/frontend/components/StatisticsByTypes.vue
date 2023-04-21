@@ -1,6 +1,5 @@
 <template>
   <div>
-    {{data}}
       <v-select
       label="Выбрать тип"
       v-model="selected"
@@ -30,6 +29,8 @@
   import updownTest from "@/src/statistics/statisticsTests/updownTest";
   import CheckHypothesis from "@/components/CheckHypothesis.vue";
   import GrowthCurves from "@/components/GrowthCurves.vue";
+  import myCalculateCenteredMovingAverage from "@/src/statistics/utils/calcCenteredMovingAverage";
+  import centerArray from "@/src/statistics/utils/centerArray";
   export default {
     name: "StatisticsByTypes",
     components: {
@@ -52,6 +53,12 @@
           legend: {position: 'bottom'},
           height: 500
         },
+        optionsPredicted: {
+          title: 'Прогноз динамики количества продаж и скользящих средних',
+          curveType: 'function',
+          legend: {position: 'bottom'},
+          height: 500
+        },
         type: 'LineChart',
         rawData: [],
         plan_types: [],
@@ -65,42 +72,8 @@
           this.rawData = response.data
           this.get_plan_types()
           this.getData()
+          this.select()
         })
-    },
-    computed: {
-      medianTestResult: function () {
-        if (this.data.length > 1) {
-          return median_test(this.data)
-        } else {
-          return null
-        }
-      },
-      // updownTestResult: function () {
-      //   // console.log(this.data)
-      //   return updownTest(this.data)
-      // },
-      // predictedData: function () {
-      //   this.dataForPlot = restoreEdgeValues(this.dataForPlot)
-      //   return predictValues(this.dataForPlot)
-      // },
-      // dataForPlot: function() {
-      //   const index = this.data[0].indexOf(this.selected)
-      //   const data = [ [this.data[0][0], this.data[0][index], 'l=3', 'l=5', 'l=7'] ]
-      //   this.data.slice(1).forEach(value => {
-      //     data.push([value[0], value[index], 0, 0, 0])
-      //   })
-      //   let l3 = this.centerArray(this.myCalculateCenteredMovingAverage(data, 3));
-      //   let l5 = this.centerArray(this.myCalculateCenteredMovingAverage(data, 5));
-      //   let l7 = this.centerArray(this.myCalculateCenteredMovingAverage(data, 7));
-      //   console.log(data)
-      //   for (let i = 0; i < data.length-1; i++) {
-      //     console.log(data.length, i+1)
-      //     data[i + 1][2] = l3[i];
-      //     data[i + 1][3] = l5[i];
-      //     data[i + 1][4] = l7[i];
-      //   }
-      //   return data
-      // }
     },
     methods: {
       select() {
@@ -109,12 +82,10 @@
         this.data.slice(1).forEach(value => {
           data.push([value[0], value[index], 0, 0, 0])
         })
-        let l3 = this.centerArray(this.myCalculateCenteredMovingAverage(data, 3));
-        let l5 = this.centerArray(this.myCalculateCenteredMovingAverage(data, 5));
-        let l7 = this.centerArray(this.myCalculateCenteredMovingAverage(data, 7));
-        console.log(data)
+        let l3 = centerArray(myCalculateCenteredMovingAverage(data.slice(1), 3));
+        let l5 = centerArray(myCalculateCenteredMovingAverage(data.slice(1), 5));
+        let l7 = centerArray(myCalculateCenteredMovingAverage(data.slice(1), 7));
         for (let i = 0; i < data.length-1; i++) {
-          console.log(data.length, i+1)
           data[i + 1][2] = l3[i];
           data[i + 1][3] = l5[i];
           data[i + 1][4] = l7[i];
@@ -125,77 +96,6 @@
         this.updownTestResult = updownTest(this.dataForPlot)
         this.medianTestResult = median_test(this.dataForPlot)
 
-      },
-      myCalculateCenteredMovingAverage(data, windowSize) {
-        const result = [];
-        for (let k = 0; k < data.length; k++) {
-          result[k] = null
-        }
-        const dataLength = data.length;
-        let index = 0;
-        for (let i = Math.floor(windowSize / 2); i < dataLength - Math.floor(windowSize / 2); i++) {
-          let sum = 0;
-          for (let j = i - Math.floor(windowSize / 2); j <= i + Math.floor(windowSize / 2); j++) {
-            sum += data[j][1];
-            index = j
-          }
-          result[index-1] = sum / windowSize;
-        }
-        return result;
-      },
-      centerArray(arr) {
-        let startCount = 0; // количество null в начале массива
-        let endCount = 0; // количество null в конце массива
-
-        // Проверяем наличие null в массиве
-        if (!arr.includes(null)) {
-          return arr;
-        }
-
-        // Подсчитываем количество null в начале массива
-        for (let i = 0; i < arr.length; i++) {
-          if (arr[i] === null) {
-            startCount++;
-          } else {
-            break; // выходим из цикла, если находим первый не null элемент
-          }
-        }
-
-        // Подсчитываем количество null в конце массива
-        for (let i = arr.length - 1; i >= 0; i--) {
-          if (arr[i] === null) {
-            endCount++;
-          } else {
-            break; // выходим из цикла, если находим первый не null элемент
-          }
-        }
-
-        // Если количество null в начале и в конце массива уже равно или разница между ними не превышает 1, возвращаем исходный массив
-        if (startCount === endCount || Math.abs(startCount - endCount) <= 1) {
-          return arr;
-        }
-
-        // Если количество null в начале больше, выкидываем null из начала и вставляем их в конец массива
-        if (startCount > endCount) {
-          while (startCount > endCount + 1) {
-            arr.push(null); // добавляем null в конец массива
-            arr.shift(); // удаляем null из начала массива
-            startCount--;
-            endCount++;
-          }
-        }
-        // Если количество null в конце больше, выкидываем null из конца и вставляем их в начало массива
-        else {
-          while (endCount > startCount + 1) {
-            arr.unshift(null); // добавляем null в начало массива
-            arr.pop(); // удаляем null из конца массива
-            endCount--;
-            startCount++;
-          }
-        }
-
-        // Возвращаем выровненный массив
-        return arr;
       },
       filterBySelected() {
         const index = this.data[0].indexOf(this.selected)

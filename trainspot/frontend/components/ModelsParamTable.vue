@@ -32,16 +32,46 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in data.slice(1)" :key="item">
-          <td>{{ item[0] }}</td>
-          <td>{{ item[1] }}</td>
-          <td>{{ data.indexOf(item) - Math.floor(data.length/2) }}</td>
-          <td>{{ item[1] * (data.indexOf(item) - Math.floor(data.length/2)) }}</td>
-          <td>{{ (data.indexOf(item) - Math.floor(data.length/2)) * (data.indexOf(item) - Math.floor(data.length/2)) }}</td>
-          <td>{{ item[1] * ((data.indexOf(item) - Math.floor(data.length/2)) * (data.indexOf(item) - Math.floor(data.length/2))) }}</td>
-          <td>{{ (data.indexOf(item) - Math.floor(data.length/2)) * (data.indexOf(item) - Math.floor(data.length/2)) * (data.indexOf(item) - Math.floor(data.length/2)) * (data.indexOf(item) - Math.floor(data.length/2)) }}</td>
-          <td>{{ Math.log(item[1]).toFixed(2) }}</td>
-          <td>{{ (Math.log(item[1]) *  (data.indexOf(item) - Math.floor(data.length/2))).toFixed(2) }}</td>
+        <tr v-for="item in data.slice(1)">
+          <td>
+            {{ item[0] }}
+          </td>
+          <td>
+            {{ item[1] }}
+          </td>
+          <td>
+            {{ data.indexOf(item) - Math.floor(data.length/2) }}
+          </td>
+          <td>
+            {{ item[1] * (data.indexOf(item) - Math.floor(data.length/2)) }}
+          </td>
+          <td>
+            {{ (data.indexOf(item) - Math.floor(data.length/2)) * (data.indexOf(item) - Math.floor(data.length/2)) }}
+          </td>
+          <td>
+            {{ item[1] * ((data.indexOf(item) - Math.floor(data.length/2)) * (data.indexOf(item) - Math.floor(data.length/2))) }}
+          </td>
+          <td>
+            {{ (data.indexOf(item) - Math.floor(data.length/2)) * (data.indexOf(item) - Math.floor(data.length/2)) * (data.indexOf(item) - Math.floor(data.length/2)) * (data.indexOf(item) - Math.floor(data.length/2)) }}
+          </td>
+          <td v-if="Math.log(item[1]) === -Infinity">
+            <katex-element expression="-\infin"/>
+          </td>
+          <td v-else-if="Math.log(item[1]) === Infinity">
+            <katex-element expression="\infin"/>
+          </td>
+          <td v-else>
+            {{ Math.log(item[1]).toFixed(2) }}
+          </td>
+          <td v-if="(Math.log(item[1]) *  (data.indexOf(item) - Math.floor(data.length/2))) === -Infinity">
+            <katex-element expression="-\infin"/>
+          </td>
+          <td v-else-if="(Math.log(item[1]) *  (data.indexOf(item) - Math.floor(data.length/2))) === Infinity">
+            <katex-element expression="\infin"/>
+          </td>
+          <td v-else>
+            {{ (Math.log(item[1]) *  (data.indexOf(item) - Math.floor(data.length/2))).toFixed(2) }}
+          </td>
 
         </tr>
         <tr>
@@ -85,13 +115,16 @@
           </td>
           <td>
 <!--            ln(y)-->
-            {{data.slice(1).map(row=>row[1]).reduce((partialSum, a) => partialSum + Math.log(a), 0).toFixed(2)}}
+            {{data.slice(1).map(row=>row[1]).reduce((partialSum, a) => partialSum + (Math.log(a) === -Infinity ? 0 : Math.log(a)), 0).toFixed(2)}}
           </td>
           <td>
 <!--            ln(y)*x-->
             {{ data.slice(1).reduce((acc, curr, idx) => {
                   const index = (idx+1) - Math.floor((data.length-1) / 2);
-                  const element = Number(Math.log(curr[1]).toFixed(2));
+                  let element = Number(Math.log(curr[1]).toFixed(2));
+                  if (element === -Infinity) {
+                    element = 0
+                  }
                   return acc + (element * index);
                 }, 0).toFixed(2) }}
           </td>
