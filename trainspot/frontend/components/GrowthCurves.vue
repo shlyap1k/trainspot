@@ -4,17 +4,19 @@
       Кривые роста
     </v-card-title>
     <v-card-text>
+
       Уравнение линейной модели:
-      <katex-element :expression="formulaLinear"/>
-      <GChart type="LineChart" :data="linearSeries" :options="optionsLinear" />
+      <katex-element :expression="formulaLinear"/><br/>
       Уравнение параболической модели:
-      <katex-element :expression="formulaQuadratic"/>
-      <GChart type="LineChart" :data="quadraticSeries" :options="optionsQuadratic" />
+      <katex-element :expression="formulaQuadratic"/><br/>
       Уравнение показательной модели:
-      <katex-element :expression="formulaExpo"/>
-      <GChart type="LineChart" :data="exponentialSeries" :options="optionsExpo" />
+      <katex-element :expression="formulaExpo"/><br/>
+
+      <GChart type="LineChart" :data="series" :options="optionsLinear" />
+
       <h2>Расчет параметров линейной, параболической и показательной модели</h2>
       <models-param-table :data="data"/>
+
     </v-card-text>
   </v-card>
 </template>
@@ -45,7 +47,6 @@
         formulaExpo: "'x = {-b \pm \sqrt{b^2-4ac} \over 2a}.'",
         actual: [],
         optionsLinear: {
-          title: 'Линейная модель',
           curveType: 'function',
           legend: {position: 'bottom'},
           height: 500
@@ -86,6 +87,19 @@
           return this.calcLinear()
         }
         return [['Дата', this.actionName ? this.actionName : 'Количество']]
+      },
+      series: function() {
+        const series = [['Дата', 'Фактические данные', 'Показательная модель', 'Параболическая модель', 'Линейная модель']]
+        console.log('series')
+        if (this.data.length > 1) {
+          for (let i = 1; i < this.exponentialSeries.length-1; i++) {
+            console.log(i)
+            console.log(this.data[i])
+            series.push([this.exponentialSeries[i][0], this.data[i][1], this.exponentialSeries[i][1],
+              this.quadraticSeries[i][1], this.linearSeries[i][1]])
+          }
+        }
+        return series
       }
     },
     methods: {
@@ -103,7 +117,7 @@
         for (let i = 0; i <= this.data.length-1; i++) {
           const y = a * Math.exp(b * (i-(this.data.length/2)));
 
-          exponentialSeries.push([this.data[i][0], y]);
+          exponentialSeries.push([this.data[i][0], y/10000]);
         }
         return exponentialSeries
       },
@@ -120,7 +134,7 @@
         const quadraticSeries = [['Дата', this.actionName ? this.actionName : 'Количество']]
         for (let i = 0; i <= this.data.length-1; i++) {
           const y = a + b * (i-(this.data.length/2)) + c * (i-(this.data.length/2)) * (i-(this.data.length/2));
-          quadraticSeries.push([this.data[i][0], y]);
+          quadraticSeries.push([this.data[i][0], y/10]);
         }
         return quadraticSeries
       },

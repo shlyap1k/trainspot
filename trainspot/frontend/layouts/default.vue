@@ -140,7 +140,7 @@ export default {
           to: '/mailings'
         },
         {
-          title: 'Отчёты',
+          title: 'Статистика',
           icon: 'mdi-chart-bar',
           to: '/reports'
         },

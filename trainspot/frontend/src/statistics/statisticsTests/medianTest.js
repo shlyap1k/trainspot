@@ -50,7 +50,8 @@ function median_test(yt) {
     max_series_count: t,
     alpha: alpha,
     ut: ut,
-    reject: isRandom
+    reject: isRandom,
+    signs: signs
   }
 }
 

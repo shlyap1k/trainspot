@@ -13,6 +13,9 @@
       <div v-if="data.max_series_count">
         Самая длинная серия: {{ data.max_series_count }}
       </div>
+      <div>
+        {{data.signs.split('').join(' ')}}
+      </div>
       <div v-if="data.alpha">
         Уровень значимости: {{ data.alpha }}
       </div>

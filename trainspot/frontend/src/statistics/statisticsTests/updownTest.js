@@ -34,7 +34,8 @@ function updown_test(data) {
     max_series_count: Tn,
     alpha: 0.05,
     ut: 1.96,
-    reject: ((Vn > Vkp) && (Tn < Tkp))
+    reject: ((Vn > Vkp) && (Tn < Tkp)),
+    signs: series
   }
 }
 

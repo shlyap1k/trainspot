@@ -1,5 +1,8 @@
 <template>
   <div>
+    <h1>
+      Статистика
+    </h1>
     <v-row>
       <v-col v-if="role==='admin'" cols="12">
         <v-row>

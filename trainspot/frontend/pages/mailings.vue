@@ -209,12 +209,15 @@
       axios({
             method: 'delete',
             url: 'http://localhost:8000/api/mailinglists/'+mailing_id+'/',
-            data: formData,
+            // data: formData,
             withCredentials: true,
             header: {
-              'Accept': 'application/json',
+              'Accept': '*/*',
               'Content-Type': 'multipart/form-data',
+              'Accept-Encoding': 'gzip, deflate, br',
+              'Connection': 'keep-alive'
             },
+            cookies: {}
           })
       .then(response => {
           // Обработка успешного создания рассылки
