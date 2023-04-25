@@ -54,7 +54,7 @@
           height: 500
         },
         optionsPredicted: {
-          title: 'Прогноз динамики количества продаж и скользящих средних',
+          title: 'Прогноз динамики количества продаж абонементов выбранного типа',
           curveType: 'function',
           legend: {position: 'bottom'},
           height: 500

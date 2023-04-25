@@ -51,7 +51,7 @@ export default {
         height: 500
       },
         optionsPredicted: {
-          title: 'Прогноз динамики регистрации новых пользователей и скользящих средних',
+          title: 'Прогноз динамики регистрации новых пользователей',
           curveType: 'function',
           legend: {position: 'bottom'},
           height: 500
