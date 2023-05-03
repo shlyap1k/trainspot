@@ -199,11 +199,6 @@
         required: true
       }
     },
-    // TODO: Сделать вывод о том, какая из моделей лучше описывает исходные данные
-    // S - less is better
-    // SSE - less is better
-    // MSE - less is better
-    // MAPE - less is better
     computed: {
       exponentialSignTestResult: function() {
         if (this.data) {
@@ -217,8 +212,8 @@
       quadraticSignTestResult: function() {
         if (this.data) {
           return {
-            medianTest: median_test(this.data.slice(1).map(row=>row[2])),
-            updownTest: updown_test(this.data.slice(1).map(row=>row[2]))
+            medianTest: median_test(this.data.slice(1).map(row=>row[3])),
+            updownTest: updown_test(this.data.slice(1).map(row=>row[3]))
           }
         }
         return null
@@ -226,8 +221,8 @@
       linearSignTestResult: function() {
         if (this.data) {
           return {
-            medianTest: median_test(this.data.slice(1).map(row=>row[2])),
-            updownTest: updown_test(this.data.slice(1).map(row=>row[2]))
+            medianTest: median_test(this.data.slice(1).map(row=>row[4])),
+            updownTest: updown_test(this.data.slice(1).map(row=>row[4]))
           }
         }
         return null
