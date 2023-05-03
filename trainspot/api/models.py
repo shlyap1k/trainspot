@@ -10,6 +10,14 @@ from django.conf import settings
 from api.signals import send_email_on_post
 
 
+class Video(models.Model):
+    title = models.CharField(max_length=100)
+    file = models.FileField(upload_to='videos/')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
+
 class Specialization(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
@@ -33,6 +41,11 @@ class User(AbstractUser):
     # user.trainer - get user's trainer if user is client
     # user.clients - if user is trainer, get his clients. user may have not trainer
 
+class Stream(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    is_live = models.BooleanField(default=False)
 
 #  models for gym
 class Gym(models.Model):

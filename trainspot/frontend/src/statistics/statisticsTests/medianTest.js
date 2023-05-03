@@ -5,7 +5,7 @@ import countSeries from "@/src/statistics/utils/countSeries";
 
 
 function median_test(yt) {
-  yt = yt.slice(1).map(row => row[1])
+  //yt = yt.slice(1).map(row => row[1])
   const alpha = 0.05; // Уровень значимости
   const ut = 1.96; // Квантиль нормального распределения уровня (1-alpha)/2
 

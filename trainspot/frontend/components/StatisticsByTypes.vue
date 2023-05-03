@@ -15,7 +15,7 @@
     <GChart :type="type" :data="predictedData" :options="optionsPredicted" />
     <check-hypothesis :data="medianTestResult" v-if="medianTestResult"/>
     <check-hypothesis :data="updownTestResult" v-if="updownTestResult"/>
-    <growth-curves :data="dataForPlot" action-name="Число покупок"/>
+    <growth-curves :data="dataForPlot" :test-results="medianTestResult" action-name="Число покупок" v-if="updownTestResult"/>
   </div>
 </template>
 
@@ -93,8 +93,8 @@
         this.dataForPlot = data
         this.dataForPlot = restoreEdgeValues(this.dataForPlot)
         this.predictedData = predictValues(this.dataForPlot)
-        this.updownTestResult = updownTest(this.dataForPlot)
-        this.medianTestResult = median_test(this.dataForPlot)
+        this.updownTestResult = updownTest(this.dataForPlot.slice(1).map(row => row[1]))
+        this.medianTestResult = median_test(this.dataForPlot.slice(1).map(row => row[1]))
 
       },
       filterBySelected() {

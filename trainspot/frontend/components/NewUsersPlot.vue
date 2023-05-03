@@ -14,7 +14,8 @@
     <GChart :type="type" :data="predictedData" :options="optionsPredicted" />
     <check-hypothesis :data="medianTestResult" v-if="medianTestResult"/>
     <check-hypothesis :data="updownTestResult" v-if="updownTestResult"/>
-    <growth-curves :data="data" action-name="Количество новых пользователей"/>
+
+    <growth-curves :data="data" :test-results="medianTestResult" action-name="Количество новых пользователей" v-if="medianTestResult"/>
   </div>
 </template>
 
@@ -63,14 +64,14 @@ export default {
     computed: {
       medianTestResult: function () {
         if (this.data.length > 1) {
-          return median_test(this.data)
+          return median_test(this.data.slice(1).map(row => row[1]))
         } else {
           return null
         }
       },
       updownTestResult: function () {
         // console.log(this.data)
-        return updownTest(this.data)
+        return updownTest(this.data.slice(1).map(row => row[1]))
       }
     },
   created() {

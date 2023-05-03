@@ -17,7 +17,9 @@ from django.urls import path, include
 from rest_framework import routers
 from api import views
 
+
 router = routers.DefaultRouter()
+
 router.register(r'users', views.UserViewSet)
 router.register(r'trainers', views.TrainersListViewSet)
 router.register(r'lessons', views.LessonViewSet)
@@ -44,6 +46,10 @@ router.register(r'mailing', views.MailingViewSet)
 urlpatterns = [
     # path('', include(router.urls)),
     # path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('streams/', views.StreamList.as_view(), name='stream-list'),
+    path('send_signal/', views.send_signal, name='send-signal'),
+    path('video_feed/', views.video_feed, name='video_feed'),
+    path('start-stream', views.start_stream),
     path('api/', include((router.urls, 'api'), namespace='instance_name')),
     path('api/', include('rest_registration.api.urls')),
     path('get-message-reactions/', views.getMessageReactions, name='message-reactions-api'),

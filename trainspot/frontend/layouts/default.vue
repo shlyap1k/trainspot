@@ -145,6 +145,16 @@ export default {
           to: '/reports'
         },
         {
+          title: 'Трансляции',
+          icon: 'mdi-video-wireless-outline',
+          to: '/streams'
+        },
+        {
+          title: 'Просмотр трансляции',
+          icon: 'mdi-television',
+          to: 'watchStream',
+        },
+        {
           title: 'Выход',
           icon: 'mdi-logout',
           to: '/logout'

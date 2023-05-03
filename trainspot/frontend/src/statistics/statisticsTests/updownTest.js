@@ -18,7 +18,7 @@ function generateSequence(y) {
 
 // Модификация 2: Критерий "восходящих и нисходящих" серий
 function updown_test(data) {
-  data = data.slice(1).map(row => row[1])
+  // data = data.slice(1).map(row => row[1])
   const n = data.length - 1
   const series = generateSequence(data)
   const counts_series = countSeries(series)

@@ -9,7 +9,7 @@ from django.db.models.functions import TruncYear, TruncMonth
 from django.http import HttpResponse, FileResponse
 from django.utils.datastructures import MultiValueDictKeyError
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework import viewsets, renderers, status
+from rest_framework import viewsets, renderers, status, generics
 from rest_framework import permissions
 from rest_framework.decorators import api_view, action
 from rest_framework.generics import get_object_or_404
@@ -19,6 +19,56 @@ from xhtml2pdf import pisa
 from api.serializers import *
 from api.models import *
 from rest_framework.permissions import BasePermission, IsAuthenticated, SAFE_METHODS
+from rest_framework.parsers import MultiPartParser, FormParser
+
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+
+from django.http import StreamingHttpResponse
+from django.views.decorators import gzip
+import cv2
+from django.http import JsonResponse
+import django_eventstream
+
+@csrf_exempt
+def send_signal(request):
+    data = request.POST
+    django_eventstream.send_event('stream', 'signal', data)
+    return JsonResponse({'status': 'ok'})
+
+class StreamList(generics.ListCreateAPIView):
+    queryset = Stream.objects.all()
+    serializer_class = StreamSerializer
+
+
+# Функция для получения видео потока с вебки
+def generate_video():
+    cap = cv2.VideoCapture(0)
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
+        # Преобразование кадра в байты
+        frame_bytes = cv2.imencode('.jpg', frame)[1].tobytes()
+        # Отправка кадра на фронтенд потоково
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n')
+
+@gzip.gzip_page
+def video_feed(request):
+    print('TEST')
+    resp = StreamingHttpResponse(generate_video(), content_type="multipart/x-mixed-replace;boundary=frame")
+    print(resp.streaming_content)
+    return resp
+
+
+def start_stream(request):
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        'stream_group',
+        {'type': 'stream_message', 'message': 'video_data'}
+    )
+    return Response({'status': 'success'})
 
 
 class ReadOnlyOrAuthenticated(BasePermission):

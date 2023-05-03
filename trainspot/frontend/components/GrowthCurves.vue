@@ -13,7 +13,7 @@
       <katex-element :expression="formulaExpo"/><br/>
 
       <GChart type="LineChart" :data="series" :options="optionsLinear" />
-
+      <check-adequacy-and-accuracy-of-models :data="series" :test-results="testResults" v-if="testResults"/>
       <h2>Расчет параметров линейной, параболической и показательной модели</h2>
       <models-param-table :data="data"/>
 
@@ -27,15 +27,21 @@
   import linearRegression from "@/src/statistics/regressionModels/linearRegression";
   import quadraticRegression from "@/src/statistics/regressionModels/quadraticRegression";
   import ModelsParamTable from "@/components/ModelsParamTable.vue";
+  import CheckAdequacyAndAccuracyOfModels from "@/components/CheckAdequacyAndAccuracyOfModels.vue";
   export default {
     name: "GrowthCurves",
     components: {
       GChart,
-      ModelsParamTable
+      ModelsParamTable,
+      CheckAdequacyAndAccuracyOfModels
     },
     props: {
       data: {
         type: Array,
+        required: true
+      },
+      testResults: {
+        type: Object,
         required: true
       },
       actionName: String
@@ -90,11 +96,8 @@
       },
       series: function() {
         const series = [['Дата', 'Фактические данные', 'Показательная модель', 'Параболическая модель', 'Линейная модель']]
-        console.log('series')
         if (this.data.length > 1) {
           for (let i = 1; i < this.exponentialSeries.length-1; i++) {
-            console.log(i)
-            console.log(this.data[i])
             series.push([this.exponentialSeries[i][0], this.data[i][1], this.exponentialSeries[i][1],
               this.quadraticSeries[i][1], this.linearSeries[i][1]])
           }

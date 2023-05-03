@@ -45,7 +45,8 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/auth',
     '@nuxtjs/toast',
-    'cookie-universal-nuxt'
+    'cookie-universal-nuxt',
+    'vue-web-cam/nuxt'
   ],
 auth: {
     strategies: {

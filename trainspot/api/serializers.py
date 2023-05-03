@@ -5,6 +5,18 @@ from django.core.exceptions import ValidationError
 import datetime
 
 
+class VideoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Video
+        fields = '__all__'
+
+
+class StreamSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Stream
+        fields = ['id', 'title', 'description', 'user', 'is_live']
+
+
 class SpecializationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Specialization
