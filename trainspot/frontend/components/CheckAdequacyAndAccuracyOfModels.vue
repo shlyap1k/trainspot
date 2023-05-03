@@ -12,19 +12,26 @@
         Для показательной модели
       </p>
       <p>
-        {{exponentialSignTestResult}}
+<!--        {{exponentialSignTestResult}}-->
+        <check-hypothesis :data="exponentialSignTestResult['medianTest']" v-if="exponentialSignTestResult['medianTest']"/>
+        <check-hypothesis :data="exponentialSignTestResult['updownTest']" v-if="exponentialSignTestResult['updownTest']"/>
       </p>
       <p>
         Для параболической модели
       </p>
       <p>
-        {{quadraticSignTestResult}}
+<!--        {{quadraticSignTestResult}}-->
+<!--        <check-hypothesis :data="quadraticSignTestResult" v-if="quadraticSignTestResult"/>-->
+        <check-hypothesis :data="quadraticSignTestResult['medianTest']" v-if="quadraticSignTestResult['medianTest']"/>
+        <check-hypothesis :data="quadraticSignTestResult['updownTest']" v-if="quadraticSignTestResult['updownTest']"/>
       </p>
       <p>
         Для линейной модели
       </p>
       <p>
-        {{linearSignTestResult}}
+<!--        {{linearSignTestResult}}-->
+        <check-hypothesis :data="linearSignTestResult['medianTest']" v-if="linearSignTestResult['medianTest']"/>
+        <check-hypothesis :data="linearSignTestResult['updownTest']" v-if="linearSignTestResult['updownTest']"/>
       </p>
       <h3>
         Проверка соответствия распределения нормальному закону (с помощью коэффициентов асимметрии и эксцесса)
@@ -33,19 +40,40 @@
         Для показательной модели
       </p>
       <p>
-        {{exponentialNormTestResult}}
+        Ассиметрия: {{exponentialNormTestResult.skewness.toFixed(2)}}
+        Эксцесс: {{exponentialNormTestResult.kurtosis.toFixed(2)}}
+      </p>
+      <p v-if="exponentialNormTestResult.kurtosis.isNormal">
+        Распределение соответствует нормальному распределению
+      </p>
+      <p v-else>
+        Распределение не соответствует нормальному распределению
       </p>
       <p>
         Для параболической модели
       </p>
       <p>
-        {{quadraticNormTestResult}}
+        Ассиметрия: {{quadraticNormTestResult.skewness.toFixed(2)}}
+        Эксцесс: {{quadraticNormTestResult.kurtosis.toFixed(2)}}
+      </p>
+      <p v-if="quadraticNormTestResult.kurtosis.isNormal">
+        Распределение соответствует нормальному распределению
+      </p>
+      <p v-else>
+        Распределение не соответствует нормальному распределению
       </p>
       <p>
         Для линейной модели
       </p>
       <p>
-        {{linearNormTestResult}}
+        Коэффициент ассиметрии: {{linearNormTestResult.skewness.toFixed(2)}}
+        Коэффициент эксцесса: {{linearNormTestResult.kurtosis.toFixed(2)}}
+      </p>
+      <p v-if="linearNormTestResult.kurtosis.isNormal">
+        Распределение соответствует нормальному распределению
+      </p>
+      <p v-else>
+        Распределение не соответствует нормальному распределению
       </p>
       <h3>
         Тест Дарбина-Уотсона
@@ -71,24 +99,78 @@
       <h3>
         Показатели точности модели (MAPE, S, SSE, MSE)
       </h3>
-      <p>
-        Для показательной модели
-      </p>
-      <p>
-        {{exponentialAccuracyIndicators}}
-      </p>
-      <p>
-        Для параболической модели
-      </p>
-      <p>
-        {{quadraticAccuracyIndicators}}
-      </p>
-      <p>
-        Для линейной модели
-      </p>
-      <p>
-        {{linearAccuracyIndicators}}
-      </p>
+      <v-simple-table>
+        <thead>
+          <th class="text-left">
+            Модель
+          </th>
+          <th class="text-left">
+            MAPE
+          </th>
+          <th class="text-left">
+            S
+          </th>
+          <th class="text-left">
+            SSE
+          </th>
+          <th class="text-left">
+            MSE
+          </th>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              Показательная
+            </td>
+            <td>
+              {{ exponentialAccuracyIndicators.MAPE.toFixed(2) }}
+            </td>
+            <td>
+              {{exponentialAccuracyIndicators.S.toFixed(2)}}
+            </td>
+            <td>
+              {{exponentialAccuracyIndicators.SSE.toFixed(2)}}
+            </td>
+            <td>
+              {{exponentialAccuracyIndicators.MSE.toFixed(2)}}
+            </td>
+          </tr>
+        <tr>
+            <td>
+              Параболическая
+            </td>
+            <td>
+              {{ quadraticAccuracyIndicators.MAPE.toFixed(2) }}
+            </td>
+            <td>
+              {{quadraticAccuracyIndicators.S.toFixed(2)}}
+            </td>
+            <td>
+              {{quadraticAccuracyIndicators.SSE.toFixed(2)}}
+            </td>
+            <td>
+              {{quadraticAccuracyIndicators.MSE.toFixed(2)}}
+            </td>
+          </tr>
+        <tr>
+            <td>
+              Линейная
+            </td>
+            <td>
+              {{ linearAccuracyIndicators.MAPE.toFixed(2) }}
+            </td>
+            <td>
+              {{linearAccuracyIndicators.S.toFixed(2)}}
+            </td>
+            <td>
+              {{linearAccuracyIndicators.SSE.toFixed(2)}}
+            </td>
+            <td>
+              {{linearAccuracyIndicators.MSE.toFixed(2)}}
+            </td>
+          </tr>
+        </tbody>
+      </v-simple-table>
       <p>
         Лучшая модель: {{chooseBest( {linear: linearAccuracyIndicators, quadratic: quadraticAccuracyIndicators, exponential: exponentialAccuracyIndicators} )}}
       </p>
@@ -104,6 +186,7 @@
   import median_test from "@/src/statistics/statisticsTests/medianTest";
   import updown_test from "@/src/statistics/statisticsTests/updownTest";
   import chooseBestModel from "@/src/statistics/utils/getBestModel";
+  import checkHypothesis from "@/components/CheckHypothesis.vue";
   export default {
     name: "CheckAdequacyAndAccuracyOfModels",
     props: {
@@ -184,11 +267,13 @@
           const lin = this.data.slice(1).map(r=>r[4])
           return DurbinWatsonTest(lin)
         }
-      },
+      }, // MAPE, S, SSE, MSE
       exponentialAccuracyIndicators: function() {
         if (this.data) {
           const exp = this.data.slice(1).map(r=>r[2])
           const realData = this.data.slice(1).map(r=>r[1])
+          const result = calcAccuracyIndicators(realData, exp)
+
           return calcAccuracyIndicators(realData, exp)
         }
       },

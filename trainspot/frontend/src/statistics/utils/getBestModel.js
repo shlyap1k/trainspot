@@ -1,50 +1,24 @@
 function chooseBestModel(models) {
   let bestModel = null;
-  let minMAPE = Infinity;
-  let minS = Infinity;
-  let minSSE = Infinity;
-  let minMSE = Infinity;
-  let maxParams = -1;
+  let maxCount = -1;
 
-  for (let model in models) {
-    const { MAPE, S, SSE, MSE, params } = models[model];
-    if (MAPE < minMAPE) {
-      bestModel = model;
-      minMAPE = MAPE;
-      minS = S;
-      minSSE = SSE;
-      minMSE = MSE;
-      maxParams = params;
-    } else if (MAPE === minMAPE) {
-      if (S < minS) {
-        bestModel = model;
-        minS = S;
-        minSSE = SSE;
-        minMSE = MSE;
-        maxParams = params;
-      } else if (S === minS) {
-        if (SSE < minSSE) {
-          bestModel = model;
-          minSSE = SSE;
-          minMSE = MSE;
-          maxParams = params;
-        } else if (SSE === minSSE) {
-          if (MSE < minMSE) {
-            bestModel = model;
-            minMSE = MSE;
-            maxParams = params;
-          } else if (MSE === minMSE) {
-            if (params > maxParams) {
-              bestModel = model;
-              maxParams = params;
-            }
-          }
-        }
+  for (const modelKey of Object.keys(models)) {
+    let count = 0;
+    for (const key of Object.keys(models[Object.keys(models)[0]])) {
+      const values = Object.values(models).map((m) => m[key]);
+      const minValue = Math.min(...values);
+      if (models[modelKey][key] === minValue) {
+        count++;
       }
     }
+    if (count > maxCount) {
+      maxCount = count;
+      bestModel = modelKey;
+    }
   }
+  const names = {linear: 'Линейная', quadratic: 'Параболическая', exponential: 'Показательная'}
 
-  return bestModel;
+  return names[bestModel];
 }
 
 export default chooseBestModel
