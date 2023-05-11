@@ -95,11 +95,23 @@
         </v-card>
       </v-col>
     </v-row>
-<!--    {{timeData}}-->
-
-<!--    абонементы-->
-<!--    {{plan_types}}-->
-    {{predictedData}}
+    <v-row>
+      <v-col>
+        <v-card>
+          <v-card-title>
+            Карта
+          </v-card-title>
+          <v-card-text>
+            <GChart
+              :settings="{packages: ['geochart'], mapsApiKey: 'AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY'}"
+              type="current"
+              :data="chartData"
+              :options="chartOptions"
+            />
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -119,7 +131,6 @@
       apiClient
         .get('financialrecords/')
         .then(response => {
-          // console.log(response.data)
           this.predictedRawData=JSON.parse(JSON.stringify(response.data))
           this.rawData=JSON.parse(JSON.stringify(response.data))
           this.getPredictedData()
@@ -127,11 +138,6 @@
           // this.predictedData = predictValues(this.predictedData)
 
         })
-      // apiClient
-      //   .get('financialrecords/')
-      //   .then(response => {
-      //     this.rawData=response.data
-      //   })
       apiClient
         .get('plans/')
         .then(response => {
@@ -139,21 +145,80 @@
           this.get_plan_types()
           let sum = this.plans.reduce((accumulator, currentValue) => accumulator + Number(currentValue.price), 0);
           this.averagePrice = sum / this.plans.length;
-          // console.log(this.chartAreaData)
+        })
+      apiClient
+        .get('users/')
+        .then(response => {
+          this.users = response.data.results
         })
     },
     computed: {
+      chartTimeData: function() {
+        const data = [
+            ['Абонемент', 'Первая продажа', 'Последняя продажа'],
+          ]
+        if (this.rawData.length > 1) {
+          let first, last, date_start, date_end;
+          this.plans.forEach(plan => {
+            last = this.rawData.findLast((element) => plan.name === element.plan.name)
+            first = this.rawData.findIndex((element) => plan.name === element.plan.name)
+            date_start = this.rawData[first].date.split('-')
+            date_end = last.date.split('-')
+            data.push([
+              plan.name,
+              new Date(date_start[0], date_start[1], date_start[2]),
+              new Date(date_end[0], date_end[1], date_end[2])
+            ])
+          })
+        }
+        return data
+      },
+      chartSankeyData: function() {
+        const data = [
+            ['Покупатель', 'Toвар', 'Количество продаж'],
+          ]
+        let count = 0
+        this.users.forEach(user => {
+          this.plans.forEach(plan => {
+            count = this.rawData.filter(value => {
+              if (value.user === user.id && value.plan.name === plan.name) {
+                return true
+              }
+            }).length
+            data.push([user.username, plan.name, count])
+          })
+        })
+
+        return data
+      },
+      chartOrgData: function() {
+        const data = [
+            ['Name', 'Manager', 'Tooltip'],
+            ['Ассортимент', null, 'Типы абонементов'],
+          ]
+        this.plan_types.forEach(value => {data.push([value, 'Ассортимент', value])})
+
+        this.plans.forEach(value => {data.push([value.name, value.plan_type.name, value.name])})
+        return data
+      },
+      chartCalData: function() {
+        const data = [['Date', 'Number of Orders'],]
+        let result = Object.values(this.rawData.reduce((r, o) => {
+          r[o.date] = r[o.date] || {date: o.date, income : 0, expenses: 0};
+          if (o.type == 1) {
+            r[o.date].income += 1;
+          }
+          return r;
+        },{}))
+        result.forEach(value => {
+          let date = value.date.split('-')
+          data.push([new Date(date[0], date[1], date[2]), value.income])
+        })
+
+        return data
+      },
       chartBubbleData: function() {
-        // [
-        //    ['ID', 'X', 'Y', 'Temperature'],
-        //    ['001', 80, 167, 120],
-        //    ['002', 79, 136, 130],
-        //    ['003', 78, 184, 50],
-        //    ['004', 72, 278, 230],
-        //    ['005', 81, 200, 210],
-        //    ['006', 72, 170, 100]
-        //  ]
-        let data = [  ['Цена', 'Число продаж', 'Прибыль', 'Название']
+        let data = [  [ 'Название', 'Цена', 'Число продаж', 'Название', 'Прибыль' ]
         ]
 
         let products = {}
@@ -170,29 +235,30 @@
           }
 
           products[productName].count++
-          products[productName].profit += parseFloat(item.plan.price)
-          products[productName].price = parseFloat(item.plan.price)
+          products[productName].profit += parseFloat(item.amount)
+          products[productName].price = parseFloat(item.amount)
         }
 
         for (let productName in products) {
           let count = products[productName].count
           let profit = products[productName].profit
-          let price = products[productName].plan
-          console.log(products[productName])
-          data.push([String(price), count, profit, productName])
+          let price = products[productName].price
+          if (productName) {
+            data.push([productName, price, count, productName, profit])
+          }
         }
-        console.log(data)
         return data
       },
       chartAreaData: function() {
         let i = 0
         const data = [['Year', 'Доход', 'Предполагаемый доход']]
-        this.rawData.forEach(function(part, index) {
+        const rawData = JSON.parse(JSON.stringify(this.rawData))
+        rawData.forEach(function(part, index) {
           this[index].date = this[index].date.split('-');
           this[index].date.pop()
           this[index].date = this[index].date.join('-')
-        }, this.rawData);
-        let result = Object.values(this.rawData.reduce((r, o) => {
+        }, rawData);
+        let result = Object.values(rawData.reduce((r, o) => {
           r[o.date] = r[o.date] || {date: o.date, income : 0, expenses: 0};
           if (o.type == 1) {
             r[o.date].income += +o.amount;
@@ -201,12 +267,9 @@
           }
           return r;
         },{}))
-        console.log(this.predictedData)
-        console.log(result)
         if (this.predictedData.length > 1) {
           result.forEach(r => {
             data.push([r.date, r.income, this.averagePrice * this.predictedData[i+1][3]])
-            console.log(i, r.income, this.predictedData[i+1][3])
             i = i + 1
           })
         } else {
@@ -258,77 +321,45 @@
     },
     data() {
       return {
+        users: [],
         averagePrice: 0,
         predictedData: [['Дата', 'Число покупок', 'l=3', 'l=5', 'l=7']],
         predictedRawData: [['Дата', 'Число покупок', 'l=3', 'l=5', 'l=7']],
         rawData: [],
         plans: [],
         plan_types: [],
-        chartTimeData: [
-            ['Product', 'Start', 'End'],
-            ['Product A', new Date(2023, 3, 1), new Date(2023, 4, 1)],
-            ['Product B', new Date(2023, 2, 1), new Date(2023, 5, 1)],
-            ['Product C', new Date(2023, 1, 1), new Date(2023, 4, 1)]
-          ],
-          chartTimeOptions: {
-            title: 'Product Purchase Timeline',
-            height: 300
-          },
-         chartSankeyData: [
-            ['From', 'To', 'Number of Sales'],
-            ['Customer 1', 'Product A', 10],
-            ['Customer 1', 'Product B', 5],
-            ['Customer 2', 'Product A', 15],
-            ['Customer 2', 'Product C', 20],
-            ['Customer 3', 'Product B', 7],
-            ['Customer 3', 'Product C', 12],
-            ['Customer 4', 'Product A', 8],
-            ['Customer 4', 'Product B', 6],
-            ['Customer 4', 'Product C', 4]
-          ],
-          chartSankeyOptions: {
-            title: 'Sales by Customer and Product',
-            height: 300
-          },
-         chartOrgData: [
-            ['Name', 'Manager', 'Tooltip'],
-            ['Assortment', null, 'Assortment of goods'],
-            ['Category A', 'Assortment', 'Category A products'],
-            ['Category B', 'Assortment', 'Category B products'],
-            ['Product 1', 'Category A', 'Product 1'],
-            ['Product 2', 'Category A', 'Product 2'],
-            ['Product 3', 'Category B', 'Product 3'],
-            ['Product 4', 'Category B', 'Product 4']
-          ],
-          chartOrgOptions: {
-            title: 'Assortment Structure',
-            allowHtml: true,
-            height: 300
-          },
-         chartCalData: [
-            ['Date', 'Number of Orders'],
-            [new Date(2023, 5, 4), 12],
-            [new Date(2023, 5, 5), 8],
-            [new Date(2023, 5, 6), 15],
-            [new Date(2023, 5, 7), 20],
-            [new Date(2023, 5, 8), 10],
-            [new Date(2023, 5, 9), 5]
-          ],
-          chartCalOptions: {
-            title: 'Orders per Day',
-            height: 300,
+        chartData: [
+          ['Lat', 'Long', 'Name'],
+          [37.4232, -122.0853, 'Work'],
+        ],
+        chartOptions: {
+          region: 'russia',
+          colorAxis: {colors: ['#00853f', '#e31b23', '#f1bf00']},
+          backgroundColor: '#81d4fa',
+          datalessRegionColor: '#f8bbd0',
+          defaultColor: '#f5f5f5'
+        },
+        chartTimeOptions: {
+          title: 'Product Purchase Timeline',
+          height: 300
+        },
+        chartSankeyOptions: {
+          title: 'Sales by Customer and Product',
+          height: 1000
+        },
+        chartOrgOptions: {
+          title: 'Assortment Structure',
+          allowHtml: true,
+          height: 300
+        },
+        chartCalOptions: {
+            title: 'Покупки по дням',
+            height: 400,
             width: 1100,
             calendar: {
               cellSize: 20
             }
           },
-         // chartAreaData: [
-         //    ['Year', 'Доход', 'Предполагаемый доход'],
-         //    // ['2015', 500, 300],
-         //    // ['2016', 600, 400],
-         //    // ['2017', 700, 500],
-         //    // ['2018', 800, 600]
-         //  ],
           chartAreaOptions: {
             title: '',
             hAxis: {
@@ -339,22 +370,14 @@
             },
             height: 300
           },
-         // chartBubbleData: [
-         //   ['ID', 'X', 'Y', 'Temperature'],
-         //   ['001', 80, 167, 120],
-         //   ['002', 79, 136, 130],
-         //   ['003', 78, 184, 50],
-         //   ['004', 72, 278, 230],
-         //   ['005', 81, 200, 210],
-         //   ['006', 72, 170, 100]
-         // ],
          chartBubbleOptions: {
            title: 'Продажи',
+           height: 300,
            hAxis: {
              title: 'Цена'
            },
            vAxis: {
-             title: 'Количество клиентов, купивших товар'
+             title: 'Количество продаж'
            },
            bubble: {
              textStyle: {
