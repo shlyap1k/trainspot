@@ -40,8 +40,8 @@
         Для показательной модели
       </p>
       <p>
-        Ассиметрия: {{exponentialNormTestResult.skewness.toFixed(2)}}
-        Эксцесс: {{exponentialNormTestResult.kurtosis.toFixed(2)}}
+        Коэффициент ассиметрии: {{exponentialNormTestResult.skewness.toFixed(2)}}
+        Коэффициент эксцесса: {{exponentialNormTestResult.kurtosis.toFixed(2)}}
       </p>
       <p v-if="exponentialNormTestResult.kurtosis.isNormal">
         Распределение соответствует нормальному распределению
@@ -53,8 +53,8 @@
         Для параболической модели
       </p>
       <p>
-        Ассиметрия: {{quadraticNormTestResult.skewness.toFixed(2)}}
-        Эксцесс: {{quadraticNormTestResult.kurtosis.toFixed(2)}}
+        Коэффициент ассиметрии: {{quadraticNormTestResult.skewness.toFixed(2)}}
+        Коэффициент эксцесса: {{quadraticNormTestResult.kurtosis.toFixed(2)}}
       </p>
       <p v-if="quadraticNormTestResult.kurtosis.isNormal">
         Распределение соответствует нормальному распределению
@@ -123,7 +123,7 @@
               Показательная
             </td>
             <td>
-              {{ exponentialAccuracyIndicators.MAPE.toFixed(2) }}
+              {{ exponentialAccuracyIndicators.MAPE.toFixed(2) }}%
             </td>
             <td>
               {{exponentialAccuracyIndicators.S.toFixed(2)}}
@@ -140,7 +140,7 @@
               Параболическая
             </td>
             <td>
-              {{ quadraticAccuracyIndicators.MAPE.toFixed(2) }}
+              {{ quadraticAccuracyIndicators.MAPE.toFixed(2) }}%
             </td>
             <td>
               {{quadraticAccuracyIndicators.S.toFixed(2)}}
@@ -157,7 +157,7 @@
               Линейная
             </td>
             <td>
-              {{ linearAccuracyIndicators.MAPE.toFixed(2) }}
+              {{ linearAccuracyIndicators.MAPE.toFixed(2) }}%
             </td>
             <td>
               {{linearAccuracyIndicators.S.toFixed(2)}}

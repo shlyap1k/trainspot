@@ -2,6 +2,7 @@ function restoreEdgeValues(data) {
   let l3 = getColumnFromArray(data.slice(1), 2)
   let l5 = getColumnFromArray(data.slice(1), 3)
   let l7 = getColumnFromArray(data.slice(1), 4)
+  console.log(l5)
 
   let avgIncL3 = calculateAverageAbsoluteIncrement(l3)
   let avgIncL5 = calculateAverageAbsoluteIncrement(l5)
@@ -11,6 +12,7 @@ function restoreEdgeValues(data) {
   restoredL3 = restoreNullValuesFromBegin(restoredL3, avgIncL3)
 
   let restoredL5 = restoreNullValuesFromEnd(l5, avgIncL5)
+  console.log(restoredL5)
   restoredL5 = restoreNullValuesFromBegin(restoredL5, avgIncL5)
 
   let restoredL7 = restoreNullValuesFromEnd(l7, avgIncL7)
@@ -69,7 +71,7 @@ function restoreNullValuesFromEnd(arr, averageAbsoluteIncrement) {
   let lastNonNullValue = null;
 
   // Определяем индекс, с которого начинается последовательность null в конце массива
-  while (lastIndex >= 0 && arr[lastIndex] === null) {
+  while (lastIndex >= 0 && (arr[lastIndex] === null || arr[lastIndex] === 0)) {
     lastIndex--;
     nullCount++;
   }

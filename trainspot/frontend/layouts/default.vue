@@ -145,6 +145,11 @@ export default {
           to: '/reports'
         },
         {
+          title: 'Диаграммы',
+          icon: 'mdi-chart-pie',
+          to: '/diagrams'
+        },
+        {
           title: 'Трансляции',
           icon: 'mdi-video-wireless-outline',
           to: '/streams'
