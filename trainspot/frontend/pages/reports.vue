@@ -82,13 +82,13 @@
 <script>
   import apiClient from "@/src/apiClient";
   import {mapGetters} from "vuex";
-  import GetPdfReport from "@/components/GetPdfReport.vue";
-  import ProfitPlot from "@/components/ProfitPlot.vue";
-  import ExpensesByCategoriesPie from "@/components/ExpensesByCategoriesPie.vue";
-  import StatisticalDynamics from "@/components/StatisticalDynamics.vue";
-  import PurchasesCountPlot from "@/components/PurchasesCountPlot.vue";
-  import NewUsersPlot from "@/components/NewUsersPlot.vue";
-  import StatisticsByTypes from "@/components/StatisticsByTypes.vue";
+  import GetPdfReport from "@/components/reports/GetPdfReport.vue";
+  import ProfitPlot from "@/components/reports/Plots/ProfitPlot.vue";
+  import ExpensesByCategoriesPie from "@/components/reports/Plots/ExpensesByCategoriesPie.vue";
+  import StatisticalDynamics from "@/components/reports/Statistics/StatisticalDynamics.vue";
+  import PurchasesCountPlot from "@/components/reports/Plots/PurchasesCountPlot.vue";
+  import NewUsersPlot from "@/components/reports/Plots/NewUsersPlot.vue";
+  import StatisticsByTypes from "@/components/reports/Plots/StatisticsByTypes.vue";
 
   export default {
     name: "reports",

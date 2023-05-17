@@ -23,6 +23,11 @@ class Specialization(models.Model):
     description = models.TextField()
 
 
+class City(models.Model):
+    name = models.CharField(max_length=100)
+    lat = models.FloatField(default=None)
+    long = models.FloatField(default=None)
+
 class User(AbstractUser):
     CLIENT = 'client'
     MANAGER = 'manager'
@@ -38,6 +43,7 @@ class User(AbstractUser):
     specialization = models.OneToOneField(Specialization, on_delete=models.CASCADE, null=True)
     role = models.CharField(max_length=100, choices=ROLE_CHOICES, blank=True, null=True)
     trainer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='clients', null=True)
+    city = models.ForeignKey(City, on_delete=models.CASCADE, related_name='clients', null=True)
     # user.trainer - get user's trainer if user is client
     # user.clients - if user is trainer, get his clients. user may have not trainer
 

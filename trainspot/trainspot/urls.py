@@ -20,6 +20,7 @@ from api import views
 
 router = routers.DefaultRouter()
 
+router.register(r'cities', views.CityViewSet)
 router.register(r'users', views.UserViewSet)
 router.register(r'trainers', views.TrainersListViewSet)
 router.register(r'lessons', views.LessonViewSet)

@@ -26,8 +26,8 @@
   import exponentialRegression from "@/src/statistics/regressionModels/exponentialRegression";
   import linearRegression from "@/src/statistics/regressionModels/linearRegression";
   import quadraticRegression from "@/src/statistics/regressionModels/quadraticRegression";
-  import ModelsParamTable from "@/components/ModelsParamTable.vue";
-  import CheckAdequacyAndAccuracyOfModels from "@/components/CheckAdequacyAndAccuracyOfModels.vue";
+  import ModelsParamTable from "@/components/reports/Statistics/ModelsParamTable.vue";
+  import CheckAdequacyAndAccuracyOfModels from "@/components/reports/Statistics/CheckAdequacyAndAccuracyOfModels.vue";
   export default {
     name: "GrowthCurves",
     components: {

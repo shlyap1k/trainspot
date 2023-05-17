@@ -5,6 +5,12 @@ from django.core.exceptions import ValidationError
 import datetime
 
 
+class CitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = City
+        fields = '__all__'
+
+
 class VideoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Video
@@ -35,12 +41,18 @@ class ClientsForeignKey(serializers.PrimaryKeyRelatedField):
 
 class UserSerializer(serializers.ModelSerializer):
     trainer = TrainerForeignKey()
+
     # clients = serializers.ChoiceField(User.objects.filter(role=1))
     # field_name = serializers.ChoiceField(*args, **kwargs)
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'specialization', 'role', 'trainer', 'clients', 'date_joined']
+        fields = ['id', 'username', 'first_name', 'last_name', 'email', 'specialization', 'role', 'trainer', 'clients', 'date_joined', 'city']
         # depth = 1
+
+    def to_representation(self, instance):
+        representation = super(UserSerializer, self).to_representation(instance)
+        representation['city'] = instance.city.name # UserSerializer(instance.city).data
+        return representation
 
 
 class RoomTypeSerializer(serializers.ModelSerializer):

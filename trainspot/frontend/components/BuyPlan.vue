@@ -65,7 +65,7 @@
 
 <script>
   import apiClient from "@/src/apiClient";
-  import BuyPlanForm from "@/components/BuyPlanForm.vue";
+  import BuyPlanForm from "@/components/Forms/BuyPlanForm.vue";
 
   export default {
     name: "BuyPlan",

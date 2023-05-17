@@ -18,7 +18,7 @@ from xhtml2pdf import pisa
 
 from api.serializers import *
 from api.models import *
-from rest_framework.permissions import BasePermission, IsAuthenticated, SAFE_METHODS
+from rest_framework.permissions import BasePermission, IsAuthenticated, SAFE_METHODS, AllowAny
 from rest_framework.parsers import MultiPartParser, FormParser
 
 from channels.layers import get_channel_layer
@@ -78,6 +78,15 @@ class ReadOnlyOrAuthenticated(BasePermission):
         return request.user and request.user.is_authenticated
 
 
+class CityViewSet(viewsets.ModelViewSet):
+    queryset = City.objects.all()
+    serializer_class = CitySerializer
+    def get_permissions(self):
+        if self.action == 'list':
+            return [ReadOnlyOrAuthenticated()]
+        else:
+            return [IsAuthenticated()]
+
 class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
@@ -100,10 +109,7 @@ class TrainersListViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     # permission_classes = [permissions.AllowAny]
     def get_permissions(self):
-        if self.action == 'list':
-            return [ReadOnlyOrAuthenticated()]
-        else:
-            return [IsAuthenticated()]
+        return [AllowAny()]
 
 
 class SpecializationViewSet(viewsets.ModelViewSet):

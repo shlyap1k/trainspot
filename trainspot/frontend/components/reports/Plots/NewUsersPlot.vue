@@ -22,14 +22,14 @@
 <script>
 import { GChart } from 'vue-google-charts/legacy'
 import apiClient from '@/src/apiClient'
-import MovingAveragesTable from "@/components/MovingAveragesTable.vue";
+import MovingAveragesTable from "@/components/reports/Statistics/MovingAveragesTable.vue";
 import restoreEdgeValues from '@/src/restoreEdgeValues'
 import predictValues from "@/src/predictValues";
-import CheckHypothesis from "@/components/CheckHypothesis.vue";
+import CheckHypothesis from "@/components/reports/Statistics/CheckHypothesis.vue";
 import _ from 'lodash'
 import median_test from "@/src/statistics/statisticsTests/medianTest";
 import updownTest from "@/src/statistics/statisticsTests/updownTest";
-import GrowthCurves from "@/components/GrowthCurves.vue";
+import GrowthCurves from "@/components/reports/Plots/GrowthCurves.vue";
 import myCalculateCenteredMovingAverage from "@/src/statistics/utils/calcCenteredMovingAverage";
 import centerArray from "@/src/statistics/utils/centerArray";
 

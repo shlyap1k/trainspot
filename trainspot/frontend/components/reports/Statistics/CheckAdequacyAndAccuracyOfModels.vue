@@ -186,7 +186,7 @@
   import median_test from "@/src/statistics/statisticsTests/medianTest";
   import updown_test from "@/src/statistics/statisticsTests/updownTest";
   import chooseBestModel from "@/src/statistics/utils/getBestModel";
-  import checkHypothesis from "@/components/CheckHypothesis.vue";
+  import checkHypothesis from "@/components/reports/Statistics/CheckHypothesis.vue";
   export default {
     name: "CheckAdequacyAndAccuracyOfModels",
     props: {

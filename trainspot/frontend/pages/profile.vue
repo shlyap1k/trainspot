@@ -8,7 +8,7 @@
 <script>
   import UserInfo from '@/components/UserInfo.vue'
   import {mapGetters} from "vuex";
-  import AppealForm from "@/components/AppealForm.vue";
+  import AppealForm from "@/components/Forms/AppealForm.vue";
   export default {
     name: "profile",
     components: {

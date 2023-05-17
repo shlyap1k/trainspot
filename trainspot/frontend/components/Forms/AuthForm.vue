@@ -13,7 +13,7 @@
 </template>
 
 <script>
-  import apiClient from '~/src/apiClient'
+  import apiClient from '@/src/apiClient'
   export default {
   data () {
     return {
