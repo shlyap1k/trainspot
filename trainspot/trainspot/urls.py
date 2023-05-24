@@ -20,6 +20,7 @@ from api import views
 
 router = routers.DefaultRouter()
 
+# router.register(r'pusher_auth', views.pusher_auth),
 router.register(r'cities', views.CityViewSet)
 router.register(r'users', views.UserViewSet)
 router.register(r'trainers', views.TrainersListViewSet)
@@ -54,4 +55,5 @@ urlpatterns = [
     path('api/', include((router.urls, 'api'), namespace='instance_name')),
     path('api/', include('rest_registration.api.urls')),
     path('get-message-reactions/', views.getMessageReactions, name='message-reactions-api'),
+    path('pusher_auth', views.pusher_auth, name='pusher_auth'),
 ]

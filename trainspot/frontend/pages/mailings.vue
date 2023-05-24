@@ -86,7 +86,7 @@
 <script>
 
   import apiClient from "@/src/apiClient";
-  import MailingListForm from "@/components/MailingListForm.vue";
+  import MailingListForm from "@/components/Forms/MailingListForm.vue";
   import DoMailing from "@/components/DoMailing.vue";
   import axios from "axios";
   import {mapGetters} from "vuex";

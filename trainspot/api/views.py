@@ -6,7 +6,7 @@ import os
 from calendar import monthrange
 from django.db.models import Sum, Case, When, F, DecimalField
 from django.db.models.functions import TruncYear, TruncMonth
-from django.http import HttpResponse, FileResponse
+from django.http import HttpResponse, FileResponse, HttpResponseForbidden
 from django.utils.datastructures import MultiValueDictKeyError
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets, renderers, status, generics
@@ -29,6 +29,46 @@ from django.views.decorators import gzip
 import cv2
 from django.http import JsonResponse
 import django_eventstream
+from pusher import Pusher
+from trainspot.settings import PUSHER_APP_ID, PUSHER_API_KEY, PUSHER_SECRET_KEY, PUSHER_CLUSTER
+
+# @csrf_exempt
+def pusher_auth(request):
+    print({'test': 'success',
+                'user_info': {  # We can put whatever we want here
+                                'username': request.user.username,
+                                'first_name': request.user.first_name,
+                                'last_name': request.user.last_name,
+                            }
+                })
+    print(request.POST)
+    # print(request.data)
+    if not request.user.is_authenticated:
+        return HttpResponseForbidden()
+
+    pusher_client = Pusher(app_id=PUSHER_APP_ID, key=PUSHER_API_KEY,
+                           secret=PUSHER_SECRET_KEY, cluster=PUSHER_CLUSTER, ssl=False)
+
+    # We must generate the token with pusher's service
+    payload = pusher_client.authenticate(
+        channel=request.POST['channel_name'],
+        socket_id=request.POST['socket_id'],
+        custom_data={
+            'user_id': request.user.id,
+            'user_info': {  # We can put whatever we want here
+                'username': request.user.username,
+                'first_name': request.user.first_name,
+                'last_name': request.user.last_name,
+            }
+        })
+    # payload = {'test': 'success',
+    #            'user_info': {  # We can put whatever we want here
+    #                            'username': request.user.username,
+    #                            'first_name': request.user.first_name,
+    #                            'last_name': request.user.last_name,
+    #                        }
+    #            }
+    return JsonResponse(payload)
 
 @csrf_exempt
 def send_signal(request):
