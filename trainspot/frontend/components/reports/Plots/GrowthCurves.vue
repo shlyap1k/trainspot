@@ -4,19 +4,16 @@
       Кривые роста
     </v-card-title>
     <v-card-text>
-
       Уравнение линейной модели:
       <katex-element :expression="formulaLinear"/><br/>
       Уравнение параболической модели:
       <katex-element :expression="formulaQuadratic"/><br/>
       Уравнение показательной модели:
       <katex-element :expression="formulaExpo"/><br/>
-
       <GChart type="LineChart" :data="series" :options="optionsLinear" />
       <check-adequacy-and-accuracy-of-models :data="series" :test-results="testResults" v-if="testResults"/>
       <h2>Расчет параметров линейной, параболической и показательной модели</h2>
       <models-param-table :data="data"/>
-
     </v-card-text>
   </v-card>
 </template>
@@ -111,15 +108,11 @@
         this.exponentialParams = exponentialRegression(this.data);
         const a = this.exponentialParams.a;
         const b = this.exponentialParams.b;
-        // {{ exponentialParams.a }} * e ^ {{ exponentialParams.b }} * x
-        // "c = \\pm\\sqrt{a^2 + b^2}"
         this.formulaExpo = "y = " + a.toFixed(2) + " \\cdot e^{" + b.toFixed(2) + " \\cdot x}"
         // Построение кривой роста
-        // console.log(this.data)
         const exponentialSeries = [['Дата', this.actionName ? this.actionName : 'Количество']]
         for (let i = 0; i <= this.data.length-1; i++) {
           const y = a * Math.exp(b * (i-(this.data.length/2)));
-
           exponentialSeries.push([this.data[i][0], y/10000]);
         }
         return exponentialSeries
@@ -130,9 +123,7 @@
         const a = this.quadraticParams.a;
         const b = this.quadraticParams.b;
         const c = this.quadraticParams.c;
-
         this.formulaQuadratic = "y = " + a.toFixed(2) + " + " + b.toFixed(2) + " \\cdot x + " + c.toFixed(2) + " \\cdot x^2"
-
         // Построение кривой роста
         const quadraticSeries = [['Дата', this.actionName ? this.actionName : 'Количество']]
         for (let i = 0; i <= this.data.length-1; i++) {

@@ -1,6 +1,6 @@
 <template>
   <div>
-      <v-select
+    <v-select
       label="Выбрать тип"
       v-model="selected"
       @change="select"

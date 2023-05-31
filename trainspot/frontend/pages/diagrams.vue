@@ -1,10 +1,12 @@
 <template>
   <v-container class="grey lighten-5">
     <v-row>
-      <v-col cols="6">
+      <v-col cols="12">
         <profit-and-predicted-profit-diagram :raw-data="rawData" :plans="plans" v-if="rawData.length > 1 && plans.length > 1"/>
       </v-col>
-      <v-col cols="6">
+    </v-row>
+    <v-row>
+      <v-col cols="12">
         <sells-and-profit-bubble-diagram :raw-data="rawData"/>
       </v-col>
     </v-row>

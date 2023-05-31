@@ -2,7 +2,7 @@
   <div class="login-page">
     <v-container>
       <v-layout flex align-center justify-center>
-        <v-flex xs4 sm4 elevation-4>
+        <v-flex>
           <v-card>
             <div class="d-flex align-center justify-space-between">
             <v-card-title flex align-center justify-center>
@@ -62,7 +62,6 @@ export default {
         await this.$auth.loginWith('local', {
           data: userData,
         })
-        // this.$store.commit('setUser', this.$axios.get('/api/profile/'))
         this.$store.dispatch('user/fetchUser');
         this.$toast.success('Успешный вход')
       } catch (error) {

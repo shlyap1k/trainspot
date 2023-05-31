@@ -97,11 +97,11 @@ export default {
           title: 'Войти',
           to: '/login'
         },
-        {
-          icon: 'mdi-clipboard-list',
-          title: 'Список цен',
-          to: '/pricelist'
-        }
+        // {
+        //   icon: 'mdi-clipboard-list',
+        //   title: 'Список цен',
+        //   to: '/pricelist'
+        // },
       ],
       authenticatedItems: [
         {
@@ -110,55 +110,45 @@ export default {
           to: '/'
         },
         {
-          icon: 'mdi-clipboard-list',
-          title: 'Список цен',
-          to: '/pricelist'
-        },
-        {
-          title: 'gyms',
-          icon: 'mdi-dumbbell',
-          to : '/gyms'
-        },
-        {
-          title: 'Мои тренировки',
-          icon: 'mdi-gymnastics',
-          to : '/trainings'
-        },
-        {
-          title: 'Профиль',
-          icon: 'mdi-account',
-          to: '/profile'
-        },
-        {
-          title: 'Чаты',
-          icon: 'mdi-forum',
-          to: '/chats'
-        },
-        {
-          title: 'Рассылки',
-          icon: 'mdi-card-account-mail-outline',
-          to: '/mailings'
-        },
-        {
-          title: 'Статистика',
-          icon: 'mdi-chart-bar',
-          to: '/reports'
-        },
-        {
-          title: 'Диаграммы',
-          icon: 'mdi-chart-pie',
-          to: '/diagrams'
-        },
-        {
-          title: 'Трансляции',
+          title: 'Трансляция',
           icon: 'mdi-video-wireless-outline',
-          to: '/streams'
+          to: '/broadcaster'
         },
         {
           title: 'Просмотр трансляции',
           icon: 'mdi-television',
-          to: 'watchStream',
+          to: '/viewer',
         },
+        // {
+        //   icon: 'mdi-clipboard-list',
+        //   title: 'Список цен',
+        //   to: '/pricelist'
+        // },
+        // {
+        //   title: 'Профиль',
+        //   icon: 'mdi-account',
+        //   to: '/profile'
+        // },
+        // {
+        //   title: 'Чаты',
+        //   icon: 'mdi-forum',
+        //   to: '/chats'
+        // },
+        // {
+        //   title: 'Рассылки',
+        //   icon: 'mdi-card-account-mail-outline',
+        //   to: '/mailings'
+        // },
+        // {
+        //   title: 'Статистика',
+        //   icon: 'mdi-chart-bar',
+        //   to: '/reports'
+        // },
+        // {
+        //   title: 'Диаграммы',
+        //   icon: 'mdi-chart-pie',
+        //   to: '/diagrams'
+        // },
         {
           title: 'Выход',
           icon: 'mdi-logout',

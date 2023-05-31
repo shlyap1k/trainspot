@@ -5,7 +5,6 @@
     </v-card-title>
     <v-card-text>
       <h3>
-<!--        TODO: display json in human-readable form-->
         Проверка остаточной последовательности свойству случайности колебаний уровней ряда (с помощью критерия знаков)
       </h3>
       <p>
@@ -13,7 +12,7 @@
       </p>
       <p>
 <!--        {{exponentialSignTestResult}}-->
-        <check-hypothesis :data="exponentialSignTestResult['medianTest']" v-if="exponentialSignTestResult['medianTest']"/>
+        <check-hypothesis :data="exponentialSignTestResult['medianTest']"/>
         <check-hypothesis :data="exponentialSignTestResult['updownTest']" v-if="exponentialSignTestResult['updownTest']"/>
       </p>
       <p>
@@ -189,6 +188,9 @@
   import checkHypothesis from "@/components/reports/Statistics/CheckHypothesis.vue";
   export default {
     name: "CheckAdequacyAndAccuracyOfModels",
+    components: {
+      checkHypothesis
+    },
     props: {
       testResults: {
         type: Object,

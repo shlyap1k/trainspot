@@ -13,7 +13,13 @@
                 На графике отчетливо прослеживается изменение количества продаж в течении года.
                 В зимние и весенние месяцы наблюдается наибольший спрос, летом и осенью количество
                 продаж значительно меньше
-                <purchases-count-plot/>
+                <predicted-statistics-page
+                  value-type="Число покупок"
+                  table-name="Скользящие средние динамики количества покупок"
+                  api-url="financialrecords/"
+                  stats-name="количества продаж"
+                  :by-month="true"
+                />
               </v-card-text>
             </v-card>
           </v-col>
@@ -23,7 +29,14 @@
               <v-card-text>
                 В течение месяца не было существенных отклонений в числе новых регистраций,
                 за исключением резкого всплеска регистраций 14 марта, что может указывать на стабильность интереса.
-                <new-users-plot/>
+<!--                <new-users-plot/>-->
+                <predicted-statistics-page
+                  value-type="Количество новых пользователей"
+                  table-name="Скользящие средние динамики количества новых пользователей"
+                  api-url="users/"
+                  stats-name="регистрации новых пользователей"
+                  :by-month="false"
+                />
               </v-card-text>
             </v-card>
           </v-col>
@@ -52,6 +65,14 @@
                   </v-list-item>
                 </v-list>
                 <statistics-by-types/>
+<!--                <predicted-statistics-page-->
+<!--                  value-type="Число покупок"-->
+<!--                  table-name="Скользящие средние динамики количества покупок"-->
+<!--                  api-url="financialrecords/"-->
+<!--                  stats-name="количества продаж абонементов выбранного типа"-->
+<!--                  :by-month="false"-->
+<!--                  :selecting="true"-->
+<!--                />-->
               </v-card-text>
             </v-card>
           </v-col>
@@ -89,7 +110,7 @@
   import PurchasesCountPlot from "@/components/reports/Plots/PurchasesCountPlot.vue";
   import NewUsersPlot from "@/components/reports/Plots/NewUsersPlot.vue";
   import StatisticsByTypes from "@/components/reports/Plots/StatisticsByTypes.vue";
-
+  import PredictedStatisticsPage from "@/components/reports/Plots/PredictedStatisticsPage.vue";
   export default {
     name: "reports",
     components: {
@@ -99,7 +120,8 @@
       StatisticalDynamics,
       PurchasesCountPlot,
       NewUsersPlot,
-      StatisticsByTypes
+      StatisticsByTypes,
+      PredictedStatisticsPage
     },
     data() {
       return {

@@ -32,23 +32,13 @@ import django_eventstream
 from pusher import Pusher
 from trainspot.settings import PUSHER_APP_ID, PUSHER_API_KEY, PUSHER_SECRET_KEY, PUSHER_CLUSTER
 
-# @csrf_exempt
+
 def pusher_auth(request):
-    print({'test': 'success',
-                'user_info': {  # We can put whatever we want here
-                                'username': request.user.username,
-                                'first_name': request.user.first_name,
-                                'last_name': request.user.last_name,
-                            }
-                })
-    print(request.POST)
-    # print(request.data)
     if not request.user.is_authenticated:
         return HttpResponseForbidden()
 
     pusher_client = Pusher(app_id=PUSHER_APP_ID, key=PUSHER_API_KEY,
                            secret=PUSHER_SECRET_KEY, cluster=PUSHER_CLUSTER, ssl=False)
-
     # We must generate the token with pusher's service
     payload = pusher_client.authenticate(
         channel=request.POST['channel_name'],
@@ -61,13 +51,6 @@ def pusher_auth(request):
                 'last_name': request.user.last_name,
             }
         })
-    # payload = {'test': 'success',
-    #            'user_info': {  # We can put whatever we want here
-    #                            'username': request.user.username,
-    #                            'first_name': request.user.first_name,
-    #                            'last_name': request.user.last_name,
-    #                        }
-    #            }
     return JsonResponse(payload)
 
 @csrf_exempt
